@@ -1,0 +1,6 @@
+h1 {margin-bottom:0;color:maroon;font-size:20pt;}
+#container {width:auto;height:300px}
+#header {background-color:orange;}
+#menu {background-color:yellow;height:100%;width:10%;float:left;}
+#content {background-color:#EEEEEE;height:100%;width:90%;float:left;}
+#footer {background-color:orange;clear:both;text-align:center;}
