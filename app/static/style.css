@@ -79,13 +79,38 @@ ul {
 }
 
 .pelicula {
-    height:310px;
+    width:fit-content;
+    height:fit-content;
+    float:left;
+}
+
+.pelicula-img {
+    width: 210px;
     margin-top:5px;
     margin-right: 5px;
     border:2px solid transparent;
     transition: 0.3s;
 }
 
-.pelicula:hover {
+.pelicula-titulo {
+    width:200px;
+    padding: 0px 10px 5px 10px;
+}
+
+.pelicula-titulo p {
+    height:20px;
+    text-overflow:ellipsis;
+    text-align:center;
+    overflow:hidden;
+    white-space:nowrap;
+    font-weight:700;
+    color:white;
+    transition: 0.3s;
+}
+.pelicula:hover .pelicula-img {
     border:2px solid orange;
+}
+
+.pelicula:hover .pelicula-titulo p {
+    color: orange;
 }
