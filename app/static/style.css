@@ -1,6 +1,91 @@
-h1 {margin-bottom:0;color:maroon;font-size:20pt;}
-#container {width:auto;height:300px}
-#header {background-color:orange;}
-#menu {background-color:yellow;height:100%;width:10%;float:left;}
-#content {background-color:#EEEEEE;height:100%;width:90%;float:left;}
-#footer {background-color:orange;clear:both;text-align:center;}
+* {
+    margin-top:0;
+    margin-left:0;
+    margin-right:0;
+    margin-bottom:0;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    background-color:rgb(21, 216, 102, 0.87);
+}
+
+.headerfooter{
+    color: white;
+    background-color:rgb(14, 82, 0);
+}
+
+#stickies {
+    position:sticky;
+    top:0;
+}
+
+#header {
+    font-family: "Lobster";
+    font-size: 120%;
+    top:0;
+    margin-top:0px;
+}
+
+#searchbar {
+    text-align: center;
+    float:right;
+    margin-right:5px;
+}
+
+#menu {
+    height:100vh;
+    width:15%;
+    float:left;
+    background-color:grey;
+}
+
+#content {
+    width:85%;
+    float:left;
+}
+
+#footer {
+    clear:both;
+    text-align:center;
+    width:100%;
+    position:relative;
+    height:20px;
+    margin-top:-20px;
+}
+
+ul {
+    list-style-type:none;
+    padding:0;
+    overflow:hidden;
+    background-color:grey;
+}
+
+#menu strong {
+    font-size:110%;
+}
+
+.item {
+    display:block;
+    color: white;
+    text-align:center;
+    padding:6px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.item:hover {
+    color:orange;
+}
+
+.pelicula {
+    height:310px;
+    margin-top:5px;
+    margin-right: 5px;
+    border:2px solid transparent;
+    transition: 0.3s;
+}
+
+.pelicula:hover {
+    border:2px solid orange;
+}

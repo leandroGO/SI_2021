@@ -4,93 +4,35 @@
   <title>Test</title>
   <link rel="stylesheet"
       type="text/css"
-      href={{url_for('static', filename='style.css')}}/>
+      href="../static/style.css"/>
 
-  <style>
-    body {
-      font-family: "Lato", sans-serif;
-    }
-    .headerfooter{
-      color: white;
-      background-color:rgb(14, 82, 0);
-    }
-    #stickies {
-      position:sticky;
-      top:0;
-    }
-    #header {
-      font-family: "Lobster";
-      font-size: 120%;
-    }
-    #menu {
-      height:100%;
-      width:15%;
-      float:left;
-    }
-    #footer {
-      clear:both;
-      text-align:center;
-    }
-    ul {
-      list-style-type:none;
-      padding:0;
-      overflow:hidden;
-      background-color:grey;
-      margin-top: 5px;
-      margin-right: 15px;
-    }
-    .item {
-      display:block;
-      color: white;
-      text-align:center;
-      padding:6px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .item:hover {
-      color:orange;
-    }
-
-    .pelicula{
-      height:310px;
-      margin-top:5px;
-      margin-right: 5px;
-      border:2px solid transparent;
-      transition: 0.3s;
-    }
-
-    .pelicula:hover {
-      border:2px solid orange;
-    }
-  </style>
 </head>
 
-<body style='background-color:rgb(21, 216, 102, 0.87)'>
+<body>
 
 <div id="container">
-
   <div id="stickies">
     <div id="header" class="headerfooter">
-      <h1 title="El mejor club de video" float='left'>VideoClub</h1>
+      <h1 title="El mejor club de video" float='left'>
+        VideoClub
+          <form id="searchbar">
+            <input type='text' id='busqueda'>
+            <input type='submit' value='Buscar'>
+          </form>
+      </h1>
     </div>
 
     <div id="menu">
       <ul id='menu_list'>
-        <li><a class='item' href='#home'>Home</a></li>
+        <li><a class='item' href='base.html'><strong>Home</strong></a></li>
         <li><a class='item' href='#item1'>Item 1</a></li>
         <li><a class='item' href='#item2'>Item 2</a></li>
         <li><a class='item' href='#item3'>Item 3</a></li>
-        <li>
-          <form style='text-align: center;'>
-            <input type='text' id='busqueda'>
-            <input type='submit' value='Buscar'>
-          </form> 
-        </li>
       </ul>
     </div>
   </div>
 
-  <div id="content" style="width:85%;float:left;">
+  <div id="content">
     <img class='pelicula' src='caratula.jpg'>
     <img class='pelicula' src='caratula.jpg'>
     <img class='pelicula' src='caratula.jpg'>
@@ -102,7 +44,6 @@
   <div id="footer" class="headerfooter">
     Pie de página
   </div>
-
 </div>
 
 </body>
