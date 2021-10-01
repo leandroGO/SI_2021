@@ -6,6 +6,7 @@
       type="text/css"
       href="../static/style.css"/>
 
+  <script src="update_iframe.js"></script>
 </head>
 
 <body>
@@ -15,22 +16,21 @@
     <h1 title="El mejor club de video">
       VideoClub
         <form id="searchbar">
-          <input type='text' id='busqueda'>
-          <input type='submit' value='Buscar'>
+          <input type="text" id="busqueda">
+          <input type="submit" value="Buscar">
         </form>
     </h1>
   </div>
   <div id="menu">
-    <ul id='menu_list'>
-      <li><a class='item' href='index.html'><strong>Home</strong></a></li>
-      <li><a class='item' href='#item1'>Item 1</a></li>
-      <li><a class='item' href='#item2'>Item 2</a></li>
-      <li><a class='item' href='#item3'>Item 3</a></li>
+    <ul id="menu_list">
+      <li><button class="item" onclick="to_home()"><strong>Home</strong></button></li>
+      <li><button class="item" onclick="to_login()">Entrar</button></li>
+      <li><button class="item" onclick="to_register()">Registrarse</button></li>
     </ul>
   </div>
 
   <div id="content">
-    <iframe src="login.html"></iframe>
+    <iframe src="lista_peliculas.html"></iframe>
   </div>
 
   <div id="footer" class="headerfooter">
