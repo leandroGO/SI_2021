@@ -5,7 +5,6 @@
   <link rel="stylesheet"
       type="text/css"
       href="../static/style.css"/>
-
 </head>
 
 <body>
@@ -13,19 +12,18 @@
 <div class="flex-container">
 <form id="login_form" method="POST">
   <label> Usuario: </label>
-  <input type="text" id="reg_user"><br>
+  <input type="text" id="reg_user" required><br>
   <label> Email: </label>
-  <input type="text" id="reg_email"><br>
+  <input type="text" id="reg_email" required><br>
   <label> Contraseña: </label>
-  <input type="password" id="reg_password"><br>
+  <input type="password" id="reg_password" required><br>
   <label> Confirmar contraseña: </label>
-  <input type="password" id="reg_confirm"><br>
+  <input type="password" id="reg_confirm" required><br>
   <label> Tarjeta de crédito: </label>
-  <input type="text" minlength='16' maxlength='16' id="reg_tarjeta"><br>
+  <input type="text" minlength='16' maxlength='16' id="reg_tarjeta" required><br>
   <label> Dirección: </label>
-  <input type="text" maxlength='50' id="reg_tarjeta"><br>
-  <label><a href="lista_peliculas.html">Registrarse</a></label>
-  <input type="submit" value="Entrar">
+  <input type="text" maxlength='50' id="reg_tarjeta" required><br>
+  <input type="submit" value="Registrarse" required>
 </form>
 </div>
 
