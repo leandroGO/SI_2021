@@ -5,24 +5,40 @@
   <link rel="stylesheet"
       type="text/css"
       href="../static/style.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="password_strength.js"></script>
 </head>
 
 <body>
 
 <div class="flex-container">
-<form id="login_form" method="POST">
-  <label> Usuario: </label>
+<form id="register_form" method="POST">
+  <label for="reg_user"> Usuario: </label>
   <input type="text" id="reg_user" required><br>
-  <label> Email: </label>
+  <br>
+
+  <label for="reg_email"> Email: </label>
   <input type="text" id="reg_email" required><br>
-  <label> Contraseña: </label>
-  <input type="password" id="reg_password" required><br>
-  <label> Confirmar contraseña: </label>
+  <br>
+
+  <label for="reg_password"> Contraseña: </label>
+  <input type="password" id="reg_password" required>
+  <br>
+  <span id="fuerza_password">Débil</span>
+  <br>
+
+  <label for="reg_confirm"> Confirmar contraseña: </label>
   <input type="password" id="reg_confirm" required><br>
-  <label> Tarjeta de crédito: </label>
+  <br>
+
+  <label for="reg_tarjeta"> Tarjeta de crédito: </label>
   <input type="text" minlength='16' maxlength='16' id="reg_tarjeta" required><br>
-  <label> Dirección: </label>
-  <input type="text" maxlength='50' id="reg_tarjeta" required><br>
+  <br>
+
+  <label for="reg_direccion"> Dirección: </label>
+  <input type="text" maxlength='50' id="reg_direccion" required><br>
+  <br>
+
   <input type="submit" value="Registrarse" required>
 </form>
 </div>

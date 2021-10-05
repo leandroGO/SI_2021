@@ -136,12 +136,17 @@ ul {
     color: orange;
 }
 
-/* Login */
-#login_form {
+/* Login / Registro */
+#login_form, #register_form {
     margin-top:10px;
     text-align:right;
 }
 
 #login_form a {
     text-align:left;
+}
+
+#fuerza_password {
+    /*visibility:hidden;*/
+    font-weight:600;
 }
