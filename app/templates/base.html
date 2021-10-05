@@ -4,9 +4,7 @@
   <title>VideoClub</title>
   <link rel="stylesheet"
       type="text/css"
-      href="../static/style.css"/>
-
-  <script src="update_iframe.js"></script>
+      href="{{url_for('static', filename='style.css')}}"/>
 </head>
 
 <body>
@@ -28,14 +26,14 @@
   </div>
   <div id="menu">
     <ul id="menu_list">
-      <li><button class="item" onclick="to_home()"><strong>Home</strong></button></li>
-      <li><button class="item" onclick="to_login()">Entrar</button></li>
-      <li><button class="item" onclick="to_register()">Registrarse</button></li>
+      <li><a class="item" href="/"><strong>Home</strong></a></li>
+      <li><a class="item" href="/login">Entrar</a></li>
+      <li><a class="item" href="/register">Registrarse</a></li>
     </ul>
   </div>
 
   <div id="content">
-    <iframe src="lista_peliculas.html"></iframe>
+    {% block content %}{% endblock %}
   </div>
 
   <div id="footer" class="headerfooter">

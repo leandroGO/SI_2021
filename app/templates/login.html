@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-  <title>VideoClub</title>
-  <link rel="stylesheet"
-      type="text/css"
-      href="../static/style.css"/>
+{% extends "base.html" %}
 
-</head>
-
-<body>
+{% block content %}
 
 <div class="flex-container">
 <form id="login_form" method="POST">
@@ -16,9 +8,9 @@
   <input type="text" id="user"><br>
   <label> Contraseña: </label>
   <input type="password" id="password"><br>
-  <label><a href="registro.html">Registrarse</a></label>
+  <label><a href="/register">Registrarse</a></label>
   <input type="submit" value="Entrar">
 </form>
 </div>
 
-</body>
+{% endblock %}

@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-  <title>VideoClub</title>
-  <link rel="stylesheet"
-      type="text/css"
-      href="../static/style.css"/>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block content %}
 
 <div class="flex-container">
 <form id="login_form" method="POST">
@@ -27,4 +20,4 @@
 </form>
 </div>
 
-</body>
+{% endblock %}

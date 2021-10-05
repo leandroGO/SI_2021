@@ -1,32 +1,24 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-  <title>VideoClub</title>
-  <link rel="stylesheet"
-      type="text/css"
-      href="../static/style.css"/>
+{% extends "base.html" %}
 
-</head>
-
-<body>
+{% block content %}
 
 <div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src='caratula.jpg'>
+  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
   <div class='pelicula-titulo'>
     <p>A todo tren: Destino Asturias</p>
   </div>
 </div>
 <div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src='caratula.jpg'>
+  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
   <div class='pelicula-titulo'>
     <p>A todo tren: Destino Asturias</p>
   </div>
 </div>
 <div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src='caratula.jpg'>
+  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
   <div class='pelicula-titulo'>
     <p>A todo tren: Destino Asturias</p>
   </div>
 </div>
 
-</body>
+{% endblock %}
