@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-  <title>VideoClub</title>
-  <link rel="stylesheet"
-      type="text/css"
-      href="../static/style.css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="password_strength.js"></script>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block content %}
 
 <div class="flex-container">
 <form id="register_form" method="POST">
@@ -43,4 +34,4 @@
 </form>
 </div>
 
-</body>
+{% endblock %}
