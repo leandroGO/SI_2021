@@ -1,0 +1,111 @@
+{ 
+  "peliculas": [ 
+    { 
+      "id": 1, 
+      "titulo": "Operación camarón", 
+      "poster": "caratula.jpg", 
+      "director": "Carlos Therón", 
+      "precio": 18.99, 
+      "categoria": "Comedia", 
+      "anno": 2021, 
+      "actores": [ 
+        { 
+          "nombre": "Julián López"
+        }, 
+        { 
+          "nombre": "Natalia de Molina" 
+        } 
+      ] 
+    },
+
+    { 
+      "id": 2, 
+      "titulo": "A todo tren: destino Asturias", 
+      "poster": "caratula.jpg", 
+      "director": "Santiago Segura", 
+      "precio": 18.99, 
+      "categoria": "Comedia", 
+      "anno": 2021, 
+      "actores": [ 
+        { 
+          "nombre": "Santiago Segura"
+        }, 
+        { 
+          "nombre": "Leo Harlem"
+        },
+        { 
+          "nombre": "David Guapo"
+        }
+      ] 
+    }, 
+
+    { 
+      "id": 3, 
+      "titulo": "After: Almas Perdidas", 
+      "poster": "caratula.jpg", 
+      "director": "Castille Landon", 
+      "precio": 18.99, 
+      "categoria": "Romántica", 
+      "anno": 2021, 
+      "actores": [ 
+        { 
+          "nombre": "Josephine Langford"
+        }
+      ] 
+    },
+
+    { 
+      "id": 4, 
+      "titulo": "Torrente 5", 
+      "poster": "caratula.jpg", 
+      "director": "Santiago Segura", 
+      "precio": 18.99, 
+      "categoria": "Acción", 
+      "anno": 2010, 
+      "actores": [ 
+        { 
+          "nombre": "Santiago Segura"
+        }
+      ] 
+    },
+
+    { 
+      "id": 5, 
+      "titulo": "Padre no hay más que uno", 
+      "poster": "caratula.jpg", 
+      "director": "Santiago Segura", 
+      "precio": 18.99, 
+      "categoria": "Comedia", 
+      "anno": 2019, 
+      "actores": [ 
+        { 
+          "nombre": "Santiago Segura"
+        }, 
+        { 
+          "nombre": "Toni Acosta"
+        },
+        { 
+          "nombre": "Silvia Abril"
+        }
+      ] 
+    },
+
+    { 
+      "id": 6, 
+      "titulo": "It", 
+      "poster": "caratula.jpg", 
+      "director": "Andy Muschietti", 
+      "precio": 18.99, 
+      "categoria": "Terror", 
+      "anno": 2017, 
+      "actores": [ 
+        { 
+          "nombre": "Bill Skarsgård"
+        }, 
+        { 
+          "nombre": "Jaeden Martell"
+        }
+      ] 
+    }
+  ]
+}

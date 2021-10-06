@@ -2,23 +2,14 @@
 
 {% block content %}
 
-<div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
-  <div class='pelicula-titulo'>
-    <p>A todo tren: Destino Asturias</p>
+
+{% for titulo in titulos %}
+  <div class='pelicula' title='{{titulo}}'>
+    <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
+    <div class='pelicula-titulo'>
+      <p>{{titulo}}</p>
+    </div>
   </div>
-</div>
-<div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
-  <div class='pelicula-titulo'>
-    <p>A todo tren: Destino Asturias</p>
-  </div>
-</div>
-<div class='pelicula' title='A todo tren: Destino Asturias'>
-  <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
-  <div class='pelicula-titulo'>
-    <p>A todo tren: Destino Asturias</p>
-  </div>
-</div>
+{% endfor %}
 
 {% endblock %}
