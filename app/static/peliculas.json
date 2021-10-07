@@ -1,7 +1,6 @@
 { 
-  "peliculas": [ 
-    { 
-      "id": 1, 
+  "peliculas": { 
+    "1": { 
       "titulo": "Operación camarón", 
       "poster": "caratula.jpg", 
       "director": "Carlos Therón", 
@@ -18,8 +17,7 @@
       ] 
     },
 
-    { 
-      "id": 2, 
+    "2": { 
       "titulo": "A todo tren: destino Asturias", 
       "poster": "caratula.jpg", 
       "director": "Santiago Segura", 
@@ -39,8 +37,7 @@
       ] 
     }, 
 
-    { 
-      "id": 3, 
+    "3": { 
       "titulo": "After: Almas Perdidas", 
       "poster": "caratula.jpg", 
       "director": "Castille Landon", 
@@ -54,8 +51,7 @@
       ] 
     },
 
-    { 
-      "id": 4, 
+    "4": { 
       "titulo": "Torrente 5", 
       "poster": "caratula.jpg", 
       "director": "Santiago Segura", 
@@ -69,8 +65,7 @@
       ] 
     },
 
-    { 
-      "id": 5, 
+    "5": { 
       "titulo": "Padre no hay más que uno", 
       "poster": "caratula.jpg", 
       "director": "Santiago Segura", 
@@ -90,8 +85,7 @@
       ] 
     },
 
-    { 
-      "id": 6, 
+    "6": {
       "titulo": "It", 
       "poster": "caratula.jpg", 
       "director": "Andy Muschietti", 
@@ -107,5 +101,5 @@
         }
       ] 
     }
-  ]
+  }
 }

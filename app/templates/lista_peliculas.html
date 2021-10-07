@@ -2,13 +2,14 @@
 
 {% block content %}
 
-
-{% for titulo in titulos %}
-  <div class='pelicula' title='{{titulo}}'>
-    <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
-    <div class='pelicula-titulo'>
-      <p>{{titulo}}</p>
-    </div>
+{% for elem in lista %}
+  <div class='pelicula' title='{{elem[0]}}'>
+    <a href="/pelicula/{{elem[1]}}">
+      <img class='pelicula-img' src="{{url_for('static', filename='caratula.jpg')}}">
+      <div class='pelicula-titulo'>
+        <p>{{elem[0]}}</p>
+      </div>
+    </a>
   </div>
 {% endfor %}
 
