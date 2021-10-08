@@ -49,8 +49,9 @@ body {
 
 #content {
     width:85%;
-    height:91vh;
+    height:91.5vh;
     float:left;
+    overflow-y:auto;
 }
 
 #footer {
@@ -64,7 +65,7 @@ body {
 }
 
 /* Lista de películas */
-ul {
+#menu ul {
     list-style-type:none;
     padding:0;
     overflow:hidden;
@@ -97,6 +98,10 @@ ul {
     height:fit-content;
     float:left;
     padding: 0px 5px 0px 5px;
+}
+
+.pelicula a {
+    text-decoration:none;
 }
 
 .pelicula-img {
@@ -143,4 +148,30 @@ ul {
 #fuerza_password {
     /*visibility:hidden;*/
     font-weight:600;
+}
+
+/* Detalle */
+#detail_img {
+    height:350px;
+    margin:7px;
+    float:left;
+}
+
+#detail_text {
+    color:white;
+    float:left;
+    margin-top:7px;
+    margin-left:8px;
+    line-height:150%
+}
+
+#detail_text h3 {
+    margin-top:15px;
+}
+
+#detail_text button {
+    font-size: 120%;
+    color:white;
+    background-color:rgb(14, 82, 0);
+    border:none; 
 }

@@ -27,4 +27,10 @@ def detalle(id):
 
     pelicula = peliculas[str(id)]
 
-    return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"], reparto=pelicula["actores"], imagen=pelicula["poster"])
+    reparto = ""
+    for actor in pelicula["actores"]:
+        reparto += ", {}".format(actor)
+
+    return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
+            director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
+            precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]))

@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <img id="detail_img" src="{{url_for('static', filename='{{imagen}}')}}">
+    <img id="detail_img" src="{{img}}">
+    <div id="detail_text">
+    	<h2>{{titulo}}</h2>
+    	<ul>
+    		<li>Año: {{anno}}</li>
+    		<li>Director: {{director}}</li>
+    		<li>Categoría: {{categoria}}</li>
+    		<li>Reparto: {{reparto}}</li>
+    	</ul>
+    	<h3>Precio: {{precio}}€</h3>
+    	<button onclick="{{url_for('static', filename='carrito.js')}}">Añadir al carrito</button>
+    </div>
 {% endblock %}

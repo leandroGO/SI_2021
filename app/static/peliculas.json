@@ -7,14 +7,7 @@
       "precio": 18.99, 
       "categoria": "Comedia", 
       "anno": 2021, 
-      "actores": [ 
-        { 
-          "nombre": "Julián López"
-        }, 
-        { 
-          "nombre": "Natalia de Molina" 
-        } 
-      ] 
+      "actores": ["Julián López", "Natalia de Molina"] 
     },
 
     "2": { 
@@ -24,17 +17,7 @@
       "precio": 18.99, 
       "categoria": "Comedia", 
       "anno": 2021, 
-      "actores": [ 
-        { 
-          "nombre": "Santiago Segura"
-        }, 
-        { 
-          "nombre": "Leo Harlem"
-        },
-        { 
-          "nombre": "David Guapo"
-        }
-      ] 
+      "actores": ["Santiago Segura", "Leo Harlem", "David Guapo"] 
     }, 
 
     "3": { 
@@ -44,11 +27,7 @@
       "precio": 18.99, 
       "categoria": "Romántica", 
       "anno": 2021, 
-      "actores": [ 
-        { 
-          "nombre": "Josephine Langford"
-        }
-      ] 
+      "actores": ["Josephine Langford"]
     },
 
     "4": { 
@@ -58,11 +37,7 @@
       "precio": 18.99, 
       "categoria": "Acción", 
       "anno": 2010, 
-      "actores": [ 
-        { 
-          "nombre": "Santiago Segura"
-        }
-      ] 
+      "actores": ["Santiago Segura"] 
     },
 
     "5": { 
@@ -72,17 +47,7 @@
       "precio": 18.99, 
       "categoria": "Comedia", 
       "anno": 2019, 
-      "actores": [ 
-        { 
-          "nombre": "Santiago Segura"
-        }, 
-        { 
-          "nombre": "Toni Acosta"
-        },
-        { 
-          "nombre": "Silvia Abril"
-        }
-      ] 
+      "actores": ["Santiago Segura", "Toni Acosta", "Silvia Abril"]
     },
 
     "6": {
@@ -92,14 +57,7 @@
       "precio": 18.99, 
       "categoria": "Terror", 
       "anno": 2017, 
-      "actores": [ 
-        { 
-          "nombre": "Bill Skarsgård"
-        }, 
-        { 
-          "nombre": "Jaeden Martell"
-        }
-      ] 
+      "actores": ["Bill Skarsgård", "Jaeden Martell"] 
     }
   }
 }
