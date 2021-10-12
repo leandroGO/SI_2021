@@ -2,15 +2,30 @@ from app import app
 from flask import render_template, request, url_for, redirect, session
 import json
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def home():
+    lista = []
     with open("app/static/peliculas.json") as json_data:
         peliculas = json.load(json_data)["peliculas"]
 
-    lista = []
-    for pelicula in peliculas.keys():
-        lista.append((peliculas[pelicula]["titulo"], pelicula))
+    if request.method == "POST":    
+        data = request.form
+
+        if data["genero"] == "todas":
+            for pelicula in peliculas.keys():
+                if data["busqueda"].lower() in peliculas[pelicula]["titulo"].lower():
+                    lista.append((peliculas[pelicula]["titulo"], pelicula))
+        else:
+           for pelicula in peliculas.keys():
+                if data["busqueda"] in peliculas[pelicula]["titulo"] and peliculas[pelicula]["categoria"].lower() == data["genero"]:
+                    lista.append((peliculas[pelicula]["titulo"], pelicula)) 
+
+    else:
+        for pelicula in peliculas.keys():
+            lista.append((peliculas[pelicula]["titulo"], pelicula))
+        
     return render_template("lista_peliculas.html", lista=lista)
+
 
 @app.route('/login')
 def login():

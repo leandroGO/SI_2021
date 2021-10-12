@@ -7,7 +7,7 @@
 
 body {
     font-family: "Lato", sans-serif;
-    background-color:rgb(21, 216, 102, 0.87);
+    background-color:yellow;
 }
 
 .flex-container {
@@ -18,7 +18,7 @@ body {
 
 #header, #footer{
     color: white;
-    background-color:rgb(14, 82, 0);
+    background-color:red;
 }
 
 #header {

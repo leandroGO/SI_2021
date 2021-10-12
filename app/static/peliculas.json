@@ -58,6 +58,16 @@
       "categoria": "Terror", 
       "anno": 2017, 
       "actores": ["Bill Skarsgård", "Jaeden Martell"] 
+    },
+
+    "7": {
+      "titulo": "El hoyo", 
+      "poster": "caratula.jpg", 
+      "director": "Galder Gaztelu-Urrutia", 
+      "precio": 18.99, 
+      "categoria": "Ciencia ficcion", 
+      "anno": 2019, 
+      "actores": ["Iván Massagué", "Alexandra Masangkay", "Zorion Eguileor"] 
     }
   }
 }
