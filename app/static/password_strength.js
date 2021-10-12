@@ -28,9 +28,9 @@ let mediumPassword = new RegExp(mediumReq1 + "|" + mediumReq2);
 //  StrengthChecker()
 // Comprueba la fuerza de la contraseña introducida
 $(function() {
-    let originalBG = $("#reg_password").css("background-color");
+    let originalBG = $("[name='reg_password']").css("background-color");
     $("#fuerza_password").hide();
-    $("#reg_password").keyup(function() {
+    $("[name='reg_password']").keyup(function() {
         let strengthBadge = $(this).siblings("#fuerza_password");
         let passwordParameter = $(this).val();
 
