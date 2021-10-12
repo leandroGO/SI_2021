@@ -3,9 +3,9 @@
 {% block content %}
 
 <div class="flex-container">
-<form id="register_form" method="POST">
+<form id="register_form" method="POST" onsubmit="return regValidate()">
   <label for="reg_user"> Usuario: </label>
-  <input type="text" id="reg_user" required><br>
+  <input type="text" id="reg_user" minlength='6' required><br>
   <br>
 
   <label for="reg_email"> Email: </label>
