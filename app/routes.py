@@ -1,6 +1,7 @@
 from app import app
 from flask import render_template, request, url_for, redirect, session
 import json
+from random import randrange
 
 @app.route('/', methods=["GET", "POST"])
 def home():
@@ -49,3 +50,8 @@ def detalle(id):
     return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
             director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
             precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]))
+
+@app.route('/ajax')
+def user_count():
+    nusers = randrange(1000)
+    return "{} usuarios conectados".format(nusers)
