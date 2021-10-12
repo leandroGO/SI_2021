@@ -6,7 +6,7 @@
 
 <form id="register_form" method="POST" onsubmit="return regValidate()">
   {% if error %}
-  <p>{{error}}</p><br>
+  <p class="error_msg">{{error}}</p><br>
   {% endif %}
 
   <label for="reg_user"> Usuario: </label>

@@ -1,5 +1,6 @@
 from app import app
-from flask import render_template, request, url_for, redirect, session
+from flask import (render_template, request, url_for, redirect, session,
+                   make_response)
 import json
 import os
 import hashlib
@@ -32,26 +33,74 @@ def home():
     return render_template("lista_peliculas.html", lista=lista)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    update_cookie = False
+    if "usuario" in session:
+        return redirect('/')
+
+    if request.method == 'GET': # El cliente solicita el formulario
+        session["url_previo"] = request.referrer
+        last_username = request.cookies.get("last_username")
+        if last_username:
+            username = last_username
+        else:
+            username = None
+        return render_template("login.html", username=username)
+
+    # if request.method == 'POST'
+    if "user" in request.form:
+        username = request.form["user"]
+        user_path = os.path.join(app.root_path, "../usuarios/" + username)
+        if not os.path.exists(user_path):
+            return render_template("login.html",
+                                   error=f"El usuario {username} no existe")
+
+        user_data_path = os.path.join(user_path, "datos.dat")
+        with open(user_data_path, 'rb') as f:
+            user_data = pickle.load(f)
+
+        if "password" in request.form:
+            submitted_password = request.form["password"]
+            salt = user_data["salt"]
+            h = hashlib.blake2b(salt + submitted_password.encode('utf-8'))
+            if h.hexdigest() != user_data["password_salted_hash"]:
+                return render_template("login.html", username=username,
+                                       error=f"Contraseña incorrecta")
+
+            session["usuario"] = user_data["name"]
+            update_cookie = True
+
+    if "url_origen" in session: # url a la que volver a toda costa
+        url_destino = session["url_origen"]
+    elif "url_previo" in session:
+        url_destino = session["url_previo"]
+    else:
+        url_destino = request.referrer
+
+    response = make_response(redirect(url_destino))
+
+    if update_cookie:
+        response.set_cookie("last_username", request.form["user"])
+
+    return response
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if "usuario" in session:
         return redirect('/')
 
-    if request.method == 'GET': # El cliente solicita el formulario
+    if request.method == 'GET':
         return render_template("registro.html")
 
     # if request.method == 'POST'
     if "reg_user" in request.form:
         username = request.form["reg_user"]
-        app.logger.info(username)
         user_path = os.path.join(app.root_path, "../usuarios/" + username)
         if os.path.exists(user_path):
             return render_template("registro.html", form=request.form,
-                    error=f"El usuario {username} ya existe")
+                                   error=f"El usuario {username} ya existe")
 
         try:
             # Todos los permisos para el usuario, solo lectura para el resto
@@ -78,6 +127,11 @@ def register():
             pickle.dump(user_data, f)
 
     return redirect('/') # TODO: hacer que vaya a la página previa (referral)
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop("usuario", None)
+    return redirect('/')
 
 
 @app.route('/pelicula/<int:id>')
