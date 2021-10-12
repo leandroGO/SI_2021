@@ -15,14 +15,14 @@ let strongPassword = new RegExp("(?=.*[a-z])"
 // cumple las demás condiciones, o bien no consta de un dígito pero sí cumple
 // las demás condiciones
 let mediumReq1 = "((?=.*[a-z])"
-                            + "(?=.*[A-Z])"
-                            + "(?=.*[0-9])"
-                            + "(?=.*[^A-Za-z0-9])"
-                            + "(?=.{6,}))";
+                 + "(?=.*[A-Z])"
+                 + "(?=.*[0-9])"
+                 + "(?=.*[^A-Za-z0-9])"
+                 + "(?=.{6,}))";
 let mediumReq2 = "((?=.*[a-z])"
-                            + "(?=.*[A-Z])"
-                            + "(?=.*[^A-Za-z0-9])"
-                            + "(?=.{8,}))";
+                 + "(?=.*[A-Z])"
+                 + "(?=.*[^A-Za-z0-9])"
+                 + "(?=.{8,}))";
 let mediumPassword = new RegExp(mediumReq1 + "|" + mediumReq2);
 
 //  StrengthChecker()
