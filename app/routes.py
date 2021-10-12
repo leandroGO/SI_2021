@@ -2,6 +2,8 @@ from app import app
 from flask import render_template, request, url_for, redirect, session
 import json
 import os
+import hashlib
+import pickle
 from random import randrange
 
 @app.route('/', methods=["GET", "POST"])
@@ -36,6 +38,9 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if "usuario" in session:
+        return redirect('/')
+
     if request.method == 'GET': # El cliente solicita el formulario
         return render_template("registro.html")
 
@@ -43,9 +48,10 @@ def register():
     if "reg_user" in request.form:
         username = request.form["reg_user"]
         app.logger.info(username)
-        user_path = os.path.join(app.root_path, "usuarios/" + username)
+        user_path = os.path.join(app.root_path, "../usuarios/" + username)
         if os.path.exists(user_path):
-            return render_template("registro.html")
+            return render_template("registro.html", form=request.form,
+                    error=f"El usuario {username} ya existe")
 
         try:
             # Todos los permisos para el usuario, solo lectura para el resto
@@ -53,6 +59,23 @@ def register():
             os.makedirs(user_path)
         finally:
             os.umask(old_umask)
+
+        # Almacena los datos
+        user_data = {}
+        user_data["name"] = request.form["reg_user"]
+        user_data["email"] = request.form["reg_email"]
+        user_data["tarjeta"] = request.form["reg_tarjeta"]
+        user_data["direccion"] = request.form["reg_direccion"]
+        user_data["saldo"] = randrange(101)
+
+        salt = os.urandom(16)
+        user_data["salt"] = salt
+        h = hashlib.blake2b(salt + request.form["reg_password"].encode('utf-8'))
+        user_data["password_salted_hash"] = h.hexdigest()
+
+        user_data_path = os.path.join(user_path, "datos.dat")
+        with open(user_data_path, 'wb') as f:
+            pickle.dump(user_data, f)
 
     return redirect('/') # TODO: hacer que vaya a la página previa (referral)
 
@@ -72,6 +95,7 @@ def detalle(id):
     return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
             director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
             precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]))
+
 
 @app.route('/ajax')
 def user_count():

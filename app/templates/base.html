@@ -31,8 +31,12 @@
   <div id="menu">
     <ul id="menu_list">
       <li><a class="item" href="/"><strong>Home</strong></a></li>
+      {% if not session["usuario"] %}
       <li><a class="item" href="/login">Entrar</a></li>
       <li><a class="item" href="/register">Registrarse</a></li>
+      {% else %}
+      <li><a class="item" href="/logout">Salir</a></li>
+      {% endif %}
     </ul>
   </div>
 
