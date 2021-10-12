@@ -7,6 +7,7 @@
       href="{{url_for('static', filename='style.css')}}"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="{{url_for('static', filename='password_strength.js')}}"></script>
+  <script src="{{url_for('static', filename='user_count.js')}}"></script>
   <script src="{{url_for('static', filename='registro_validation.js')}}"></script>
 </head>
 
@@ -16,7 +17,7 @@
   <div id="header">
     <h1 title="El mejor club de video">
       VideoClub
-        <form id="searchbar" method="POST">
+        <form id="searchbar" action="/" method="POST">
           <input type="text" name="busqueda">
           <select name="genero">
             <option value="todas">Todas</option>
