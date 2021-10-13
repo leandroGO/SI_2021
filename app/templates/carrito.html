@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% if lista|length > 0 %}
+		<ul>
+		{% for elem in lista %}
+			<li>
+				{{elem[2]}} (x{{elem[1]}}) - {% if elem[1] > 1 %}<a href = "/sub/{{elem[0]}}">Quitar uno</a> / {% endif %} <a href="/delete/{{elem[0]}}">Eliminar todos</a>
+			</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		No hay ninguna pelicula en el carrito
+	{% endif %}
+{% endblock %}

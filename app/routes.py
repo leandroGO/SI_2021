@@ -148,8 +148,60 @@ def detalle(id):
 
     return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
             director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
-            precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]))
+            precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]),
+            id=str(id))
 
+
+@app.route('/carrito')
+def carrito():
+    context = []
+    if "carrito" in session:
+        lista = session["carrito"]
+    else:
+        lista = []
+
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path) as json_data:
+        peliculas = json.load(json_data)["peliculas"]
+
+    for item in lista.keys():
+        context.append((item, lista[item], peliculas[item]["titulo"]))
+    print(context)
+    return render_template("carrito.html", lista=context)
+
+@app.route('/add/<int:id>')
+def add(id):
+    # No hay carrito
+    if "carrito" not in session:
+        carrito = {str(id): 1}
+        session["carrito"] = carrito
+
+    # Carrito ya creado sin la pelicula
+    elif str(id) not in session["carrito"]:
+        session["carrito"][str(id)] = 1
+
+    # Carrito contiene pelicula, se incrementa cantidad
+    else:
+        session["carrito"][str(id)] += 1
+
+    session.modified = True
+    return redirect('/carrito')
+
+@app.route('/sub/<int:id>')
+def sub(id):
+    if "carrito" in session and str(id) in session["carrito"] and session["carrito"][str(id)] > 1:
+        session["carrito"][str(id)] -= 1 
+        session.modified = True
+
+    return redirect('/carrito')
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    if "carrito" in session and str(id) in session["carrito"]:
+        session["carrito"].pop(str(id))
+        session.modified = True
+        
+    return redirect('/carrito')
 
 @app.route('/ajax')
 def user_count():

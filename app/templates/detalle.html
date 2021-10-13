@@ -11,6 +11,6 @@
     		<li>Reparto: {{reparto}}</li>
     	</ul>
     	<h3>Precio: {{precio}}€</h3>
-    	<button onclick="{{url_for('static', filename='carrito.js')}}">Añadir al carrito</button>
+    	<a href="/add/{{id}}">Añadir al carrito</a>
     </div>
 {% endblock %}
