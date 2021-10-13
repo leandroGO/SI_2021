@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if saldo >= precio %}
+    {% endif %}
+        <a href='/saldo'>Comprar con saldo de cuenta</a>
+    {% if puntos >= precio*100 %}
+        <a href='/puntos'>Comprar con puntos</a>
+    {% endif %}
+    {% if precio > saldo and precio*100 > puntos %}
+        No dispone de saldo ni puntos con los que realizar el pago
+    {% endif %}
+{% endblock %}

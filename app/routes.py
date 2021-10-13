@@ -97,7 +97,7 @@ def register():
     # if request.method == 'POST'
     if "reg_user" in request.form:
         username = request.form["reg_user"]
-        user_path = os.path.join(app.root_path, "../usuarios/" + username)
+        user_path = os.path.join(app.root_path, "../usuarios/", username)
         if os.path.exists(user_path):
             return render_template("registro.html", form=request.form,
                                    error=f"El usuario {username} ya existe")
@@ -116,6 +116,7 @@ def register():
         user_data["tarjeta"] = request.form["reg_tarjeta"]
         user_data["direccion"] = request.form["reg_direccion"]
         user_data["saldo"] = randrange(101)
+        user_data["puntos"] = 0
 
         salt = os.urandom(16)
         user_data["salt"] = salt
@@ -158,7 +159,7 @@ def carrito():
     if "carrito" in session:
         lista = session["carrito"]
     else:
-        lista = []
+        lista = dict()
 
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
@@ -202,6 +203,30 @@ def delete(id):
         session.modified = True
         
     return redirect('/carrito')
+
+@app.route('/buy')
+def buy():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if "carrito" not in session:
+        return redirect("/")
+
+    # Usuario con sesion iniciada
+    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
+    with open(path, "rb") as user_data:
+        pass #TODO: Cargar precio y puntos
+
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path) as json_data:
+        peliculas = json.load(json_data)["peliculas"]
+
+    count = 0
+    for pelicula in session["carrito"]:
+        count += peliculas[pelicula]["precio"] * session["carrito"][pelicula]
+
+    return render_template("pago.html", precio=count, saldo=saldo, puntos=puntos)
+
 
 @app.route('/ajax')
 def user_count():
