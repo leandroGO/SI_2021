@@ -115,7 +115,7 @@ def register():
         user_data["email"] = request.form["reg_email"]
         user_data["tarjeta"] = request.form["reg_tarjeta"]
         user_data["direccion"] = request.form["reg_direccion"]
-        user_data["saldo"] = randrange(101)
+        user_data["saldo"] = 20000 #randrange(101)
         user_data["puntos"] = 0
 
         salt = os.urandom(16)
@@ -213,10 +213,14 @@ def buy():
         return redirect("/")
 
     # Usuario con sesion iniciada
+    username = session["usuario"]
     path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "rb") as user_data:
-        pass #TODO: Cargar precio y puntos
+    with open(path, "rb") as f:
+        user_data = pickle.load(f)        
 
+    saldo = user_data["saldo"]
+    puntos = user_data["puntos"]
+    
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         peliculas = json.load(json_data)["peliculas"]
@@ -225,8 +229,72 @@ def buy():
     for pelicula in session["carrito"]:
         count += peliculas[pelicula]["precio"] * session["carrito"][pelicula]
 
+    session["subtotal"] = count
     return render_template("pago.html", precio=count, saldo=saldo, puntos=puntos)
 
+@app.route('/saldo')
+def saldo():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if "carrito" not in session or "subtotal" not in session:
+        return redirect("/")
+
+    username = session["usuario"]
+
+    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
+    with open(path, "rb") as f:
+        user_data = pickle.load(f) 
+
+    if session["subtotal"] > user_data["saldo"]:
+        return redirect("/")
+    
+    user_data["saldo"] -= session["subtotal"]
+    
+    with open(path, "wb") as f:
+        pickle.dump(user_data, f)
+
+    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            historial = json.load(f)
+    else:
+        historial = dict()
+
+    # Actualizacion historial
+    for item in session["carrito"]:
+        if item not in historial:
+            historial[item] = session["carrito"][item]
+        else:
+            historial[item] += session["carrito"][item]
+    
+    with open(path, "w") as f:
+        json.dump(historial, f)
+
+    session.pop("carrito")
+
+    return redirect('/historial')
+
+@app.route('/historial')
+def historial():
+    context = []
+    username = session["usuario"]
+    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
+    
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            historial = json.load(f)
+    else:
+        historial = dict()
+
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path) as json_data:
+        peliculas = json.load(json_data)["peliculas"]
+
+    for item in historial:
+        context.append((item, historial[item], peliculas[item]["titulo"]))    
+
+    return render_template("historial.html", lista=context)
 
 @app.route('/ajax')
 def user_count():

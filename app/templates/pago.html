@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1>Subtotal: {{precio}}  Saldo{{saldo}} Puntos: {{puntos}}</h1>
     {% if saldo >= precio %}
-    {% endif %}
         <a href='/saldo'>Comprar con saldo de cuenta</a>
+    {% endif %}
     {% if puntos >= precio*100 %}
         <a href='/puntos'>Comprar con puntos</a>
     {% endif %}
