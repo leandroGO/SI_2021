@@ -1,15 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% if lista|length > 0 %}
-		<ul>
-		{% for elem in lista %}
-			<li>
-				{{elem[2]}} (x{{elem[1]}})
-			</li>
-		{% endfor %}
-		</ul>
-	{% else %}
-		No se ha realizado ninguna compra
-	{% endif %}
+  {% if historial %}
+  <table>
+    <tr>
+      <th><strong>Fecha</strong></th>
+      <th><strong>Importe</strong></th>
+    </tr>
+    {% for fecha in historial %}
+    <tr>
+      <td>{{fecha.strftime("%d/%m/%Y, %H:%M:%S")}}</td>
+      <td>{{historial[fecha][0]}}</td>
+    </tr>
+    <div class="detalle_compra">
+      <!-- Tabla de detalle de compra -->
+    </div>
+    {% endfor %}
+  </table>
+  {% else %}
+    No se ha realizado ninguna compra
+  {% endif %}
 {% endblock %}
