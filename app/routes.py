@@ -6,6 +6,8 @@ import os
 import hashlib
 import pickle
 from random import randrange
+from datetime import now
+
 
 @app.route('/', methods=["GET", "POST"])
 def home():
@@ -132,6 +134,7 @@ def register():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop("usuario", None)
+    session.pop("carrito", None)
     return redirect('/')
 
 
@@ -254,6 +257,11 @@ def saldo():
     with open(path, "wb") as f:
         pickle.dump(user_data, f)
 
+    path = os.path.join(app.root_path, "peliculas.json")
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            peliculas = json.load(f)["peliculas"]
+
     path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
     if os.path.exists(path):
         with open(path, "r") as f:
@@ -262,11 +270,11 @@ def saldo():
         historial = dict()
 
     # Actualizacion historial
+    subtotal = session["subtotal"]
+    compra = []
     for item in session["carrito"]:
-        if item not in historial:
-            historial[item] = session["carrito"][item]
-        else:
-            historial[item] += session["carrito"][item]
+        compra.append((peliculas[item]["titulo"], peliculas[item]["precio"], session["carrito"][item]))
+    historial[datetime.now()] = (subtotal, compra)
     
     with open(path, "w") as f:
         json.dump(historial, f)
