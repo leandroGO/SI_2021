@@ -150,6 +150,10 @@ body {
     font-weight:600;
 }
 
+.error_msg {
+    color:red;
+}
+
 /* Detalle */
 #detail_img {
     height:350px;
