@@ -179,3 +179,52 @@ body {
     background-color:rgb(14, 82, 0);
     border:none; 
 }
+
+/* Historial */
+.historial {
+    width:90%;
+}
+
+.historial, .historial > th, .historial > td {
+    border-collapse: collapse;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.historial tr {
+    transition: 0.1s;
+}
+
+.historial th {
+    text-align:left;
+}
+
+.historial th:last-child, .historial td:last-child {
+    text-align:right;
+}
+
+.historial tr:nth-child(even) {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.historial tr ~ tr:hover {
+    background-color: orange;
+}
+
+.detalle_compra {
+    font-size:90%;
+}
+
+.detalle_compra table {
+    width:100%;
+}
+
+.detalle_compra table, .detalle_compra th, .detalle_compra td {
+    border-collapse: collapse;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detalle_compra table tr:nth-child(even) {
+    background-color:rgba(128, 128, 128, 0.2);
+}

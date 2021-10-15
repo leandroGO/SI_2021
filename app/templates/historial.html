@@ -2,19 +2,28 @@
 
 {% block content %}
   {% if historial|length > 0 %}
-  <table>
+  <table class="historial">
     <tr>
-      <th><strong>Fecha</strong></th>
-      <th><strong>Importe</strong></th>
+      <th><h2>Fecha</h2></th>
+      <th><h2>Importe</h2></th>
     </tr>
     {% for fecha in historial %}
     <tr>
-      <td>{{fecha}}</td>
+      <td>{{fecha}}
+        <div class="detalle_compra">
+          <!-- Tabla de detalle de compra -->
+          <table>
+            {% for pelicula in historial[fecha][1] %}
+            <tr>
+              <td>{{pelicula[0]}}</td>
+              <td>{{pelicula[2]}} x {{pelicula[1]}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </td>
       <td>{{historial[fecha][0]}}</td>
     </tr>
-    <div class="detalle_compra">
-      <!-- Tabla de detalle de compra -->
-    </div>
     {% endfor %}
   </table>
   {% else %}

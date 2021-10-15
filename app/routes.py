@@ -194,7 +194,7 @@ def add(id):
 @app.route('/sub/<int:id>')
 def sub(id):
     if "carrito" in session and str(id) in session["carrito"] and session["carrito"][str(id)] > 1:
-        session["carrito"][str(id)] -= 1 
+        session["carrito"][str(id)] -= 1
         session.modified = True
 
     return redirect('/carrito')
@@ -204,7 +204,7 @@ def delete(id):
     if "carrito" in session and str(id) in session["carrito"]:
         session["carrito"].pop(str(id))
         session.modified = True
-        
+
     return redirect('/carrito')
 
 @app.route('/buy')
@@ -219,11 +219,11 @@ def buy():
     username = session["usuario"]
     path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
     with open(path, "rb") as f:
-        user_data = pickle.load(f)        
+        user_data = pickle.load(f)
 
     saldo = user_data["saldo"]
     puntos = user_data["puntos"]
-    
+
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         peliculas = json.load(json_data)["peliculas"]
@@ -247,13 +247,13 @@ def saldo():
 
     path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
     with open(path, "rb") as f:
-        user_data = pickle.load(f) 
+        user_data = pickle.load(f)
 
     if session["subtotal"] > user_data["saldo"]:
         return redirect("/")
-    
+
     user_data["saldo"] -= session["subtotal"]
-    
+
     with open(path, "wb") as f:
         pickle.dump(user_data, f)
 
@@ -273,8 +273,8 @@ def saldo():
     compra = []
     for item in session["carrito"]:
         compra.append((peliculas[item]["titulo"], peliculas[item]["precio"], session["carrito"][item]))
-    historial[datetime.now().ctime()] = (subtotal, compra)
-    
+    historial[datetime.now().strftime("%Y-%m-%d (%H:%M:%S)")] = (subtotal, compra)
+
     with open(path, "w") as f:
         json.dump(historial, f)
 
@@ -284,14 +284,17 @@ def saldo():
 
 @app.route('/historial')
 def historial():
+    if "usuario" not in session:
+        return redirect('/')
+
     username = session["usuario"]
     path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
-    
+
     if os.path.exists(path):
         with open(path, "r") as f:
             historial = json.load(f)
     else:
-        historial = dict()   
+        historial = dict()
 
     return render_template("historial.html", historial=historial)
 
