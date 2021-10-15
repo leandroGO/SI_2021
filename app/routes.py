@@ -249,17 +249,77 @@ def saldo():
     with open(path, "rb") as f:
         user_data = pickle.load(f)
 
+    # Actualizacion saldo
     if session["subtotal"] > user_data["saldo"]:
         return redirect("/")
 
     user_data["saldo"] -= session["subtotal"]
 
+    # Actualizacion puntos
+    user_data["puntos"] += session["subtotal"]*5
+
     with open(path, "wb") as f:
         pickle.dump(user_data, f)
 
+    return guardar_compra()
+
+@app.route('/puntos')
+def puntos():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if "carrito" not in session or "subtotal" not in session:
+        return redirect("/")
+
+    username = session["usuario"]
+
+    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
+    with open(path, "rb") as f:
+        user_data = pickle.load(f)
+
+    # Actualizacion saldo
+    if session["subtotal"]*100 > user_data["puntos"]:
+        return redirect("/")
+
+    user_data["puntos"] -= session["subtotal"]*100
+
+    # Actualizacion puntos
+    user_data["puntos"] += session["subtotal"]*5
+
+    with open(path, "wb") as f:
+        pickle.dump(user_data, f)
+
+    return guardar_compra()
+
+@app.route('/historial')
+def historial():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    username = session["usuario"]
+    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
+
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            historial = json.load(f)
+    else:
+        historial = dict()
+
+    return render_template("historial.html", historial=historial)
+
+@app.route('/ajax')
+def user_count():
+    nusers = randrange(1000)
+    return "{} usuarios conectados".format(nusers)
+
+
+# Funciones auxiliares
+def guardar_compra():
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path, "r") as f:
         peliculas = json.load(f)["peliculas"]
+
+    username = session["usuario"]
 
     path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
     if os.path.exists(path):
@@ -281,24 +341,3 @@ def saldo():
     session.pop("carrito")
 
     return redirect('/historial')
-
-@app.route('/historial')
-def historial():
-    if "usuario" not in session:
-        return redirect('/')
-
-    username = session["usuario"]
-    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
-
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            historial = json.load(f)
-    else:
-        historial = dict()
-
-    return render_template("historial.html", historial=historial)
-
-@app.route('/ajax')
-def user_count():
-    nusers = randrange(1000)
-    return "{} usuarios conectados".format(nusers)
