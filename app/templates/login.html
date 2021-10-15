@@ -4,10 +4,13 @@
 
 <div class="flex-container">
 <form id="login_form" method="POST">
+  {% if error %}
+  <p class="error_msg">{{error}}</p><br>
+  {% endif %}
   <label> Usuario: </label>
-  <input type="text" id="user"><br>
+  <input type="text" name="user" {% if username %} value="{{username}}" {% endif %}required><br>
   <label> Contraseña: </label>
-  <input type="password" id="password"><br>
+  <input type="password" name="password" required><br>
   <label><a href="/register">Registrarse</a></label>
   <input type="submit" value="Entrar">
 </form>

@@ -7,6 +7,9 @@
       href="{{url_for('static', filename='style.css')}}"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="{{url_for('static', filename='password_strength.js')}}"></script>
+  <script src="{{url_for('static', filename='user_count.js')}}"></script>
+  <script src="{{url_for('static', filename='registro_validation.js')}}"></script>
+  <script src="{{url_for('static', filename='detalle_compra.js')}}"></script>
 </head>
 
 <body>
@@ -15,9 +18,9 @@
   <div id="header">
     <h1 title="El mejor club de video">
       VideoClub
-        <form id="searchbar">
-          <input type="text" id="busqueda">
-          <select id="genero">
+        <form id="searchbar" action="/" method="POST">
+          <input type="text" name="busqueda">
+          <select name="genero">
             <option value="todas">Todas</option>
             <option value="accion">Acción</option>
             <option value="comedia">Comedia</option>
@@ -29,8 +32,14 @@
   <div id="menu">
     <ul id="menu_list">
       <li><a class="item" href="/"><strong>Home</strong></a></li>
+      <li><a class="item" href="/carrito">Carrito</a></li>
+      {% if not session["usuario"] %}
       <li><a class="item" href="/login">Entrar</a></li>
       <li><a class="item" href="/register">Registrarse</a></li>
+      {% else %}
+      <li><a class="item" href="/historial">Historial</a></li>
+      <li><a class="item" href="/logout">Salir</a></li>
+      {% endif %}
     </ul>
   </div>
 

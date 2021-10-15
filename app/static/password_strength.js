@@ -15,22 +15,22 @@ let strongPassword = new RegExp("(?=.*[a-z])"
 // cumple las demás condiciones, o bien no consta de un dígito pero sí cumple
 // las demás condiciones
 let mediumReq1 = "((?=.*[a-z])"
-                            + "(?=.*[A-Z])"
-                            + "(?=.*[0-9])"
-                            + "(?=.*[^A-Za-z0-9])"
-                            + "(?=.{6,}))";
+                 + "(?=.*[A-Z])"
+                 + "(?=.*[0-9])"
+                 + "(?=.*[^A-Za-z0-9])"
+                 + "(?=.{6,}))";
 let mediumReq2 = "((?=.*[a-z])"
-                            + "(?=.*[A-Z])"
-                            + "(?=.*[^A-Za-z0-9])"
-                            + "(?=.{8,}))";
+                 + "(?=.*[A-Z])"
+                 + "(?=.*[^A-Za-z0-9])"
+                 + "(?=.{8,}))";
 let mediumPassword = new RegExp(mediumReq1 + "|" + mediumReq2);
 
 //  StrengthChecker()
 // Comprueba la fuerza de la contraseña introducida
 $(function() {
-    let originalBG = $("#reg_password").css("background-color");
+    let originalBG = $("[name='reg_password']").css("background-color");
     $("#fuerza_password").hide();
-    $("#reg_password").keyup(function() {
+    $("[name='reg_password']").keyup(function() {
         let strengthBadge = $(this).siblings("#fuerza_password");
         let passwordParameter = $(this).val();
 

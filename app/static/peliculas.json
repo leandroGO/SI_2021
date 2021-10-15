@@ -118,6 +118,16 @@
       "categoria": "Acción",
       "anno": 2009,
       "actores": ["Justin Chatwin", "Chow Yun-Fat", "Emmy Rossum"]
+    },
+
+    "13": {
+      "titulo": "El hoyo",
+      "poster": "caratula.jpg",
+      "director": "Galder Gaztelu-Urrutia",
+      "precio": 18.99,
+      "categoria": "Ciencia ficcion",
+      "anno": 2019,
+      "actores": ["Iván Massagué", "Alexandra Masangkay", "Zorion Eguileor"]
     }
   }
 }

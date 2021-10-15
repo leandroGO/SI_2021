@@ -10,8 +10,7 @@ import json
 app = Flask(__name__)
 
 # ejemplo de sesion Flask: http://flask.pocoo.org/docs/1.0/quickstart/#sessions
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
+app.secret_key = b'\xf4\xbd\xf0\xe1\xcc\xed\xd6\xc1\x12!\xeb\xc4\xe9y\xd7\xd6'
 try:
     from flask_session import Session
     this_dir = os.path.dirname(os.path.abspath(__file__))
