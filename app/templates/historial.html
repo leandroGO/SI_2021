@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% if historial %}
+  {% if historial|length > 0 %}
   <table>
     <tr>
       <th><strong>Fecha</strong></th>
@@ -9,7 +9,7 @@
     </tr>
     {% for fecha in historial %}
     <tr>
-      <td>{{fecha.strftime("%d/%m/%Y, %H:%M:%S")}}</td>
+      <td>{{fecha}}</td>
       <td>{{historial[fecha][0]}}</td>
     </tr>
     <div class="detalle_compra">

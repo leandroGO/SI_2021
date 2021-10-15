@@ -6,7 +6,7 @@ import os
 import hashlib
 import pickle
 from random import randrange
-from datetime import now
+from datetime import datetime
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -257,10 +257,9 @@ def saldo():
     with open(path, "wb") as f:
         pickle.dump(user_data, f)
 
-    path = os.path.join(app.root_path, "peliculas.json")
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            peliculas = json.load(f)["peliculas"]
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path, "r") as f:
+        peliculas = json.load(f)["peliculas"]
 
     path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
     if os.path.exists(path):
@@ -274,7 +273,7 @@ def saldo():
     compra = []
     for item in session["carrito"]:
         compra.append((peliculas[item]["titulo"], peliculas[item]["precio"], session["carrito"][item]))
-    historial[datetime.now()] = (subtotal, compra)
+    historial[datetime.now().ctime()] = (subtotal, compra)
     
     with open(path, "w") as f:
         json.dump(historial, f)
@@ -285,7 +284,6 @@ def saldo():
 
 @app.route('/historial')
 def historial():
-    context = []
     username = session["usuario"]
     path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
     
@@ -293,16 +291,9 @@ def historial():
         with open(path, "r") as f:
             historial = json.load(f)
     else:
-        historial = dict()
+        historial = dict()   
 
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        peliculas = json.load(json_data)["peliculas"]
-
-    for item in historial:
-        context.append((item, historial[item], peliculas[item]["titulo"]))    
-
-    return render_template("historial.html", lista=context)
+    return render_template("historial.html", historial=historial)
 
 @app.route('/ajax')
 def user_count():
