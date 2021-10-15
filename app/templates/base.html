@@ -16,8 +16,11 @@
 
 <div id="container">
   <div id="header">
-    <h1 title="El mejor club de video">
+    <h1>
+      <a href="/">
+      <img id="logo" src="{{url_for('static', filename='logo.png')}}">
       VideoClub
+      </a>
         <form id="searchbar" action="/" method="POST">
           <input type="text" name="busqueda">
           <select name="genero">
