@@ -3,7 +3,8 @@
 {% block content %}
     <div id="div_pago">
         <h1>Subtotal: {{precio|round(2)}}€</h1>
-        <h2>Saldo: {{saldo|round(2)}}€  Puntos: {{puntos|round(0)|int}}</h2>
+        <h2>Saldo: {{saldo|round(2)}}€</h2>
+        <h2>Puntos: {{puntos|round(0)|int}}</h2>
         <br>
         {% if saldo >= precio %}
             <a class="boton_pago" href='/saldo'>Comprar con saldo de cuenta</a>
@@ -13,6 +14,7 @@
         {% endif %}
         {% if precio > saldo and precio*100 > puntos %}
             No dispone de saldo ni puntos con los que realizar el pago
+            (<a href='/historial'>aumentar saldo</a>)
         {% endif %}
     </div>
 {% endblock %}
