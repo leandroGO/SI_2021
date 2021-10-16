@@ -10,6 +10,6 @@ function user_count() {
 }
 
 $(document).ready(function(){
-    setInterval(user_count, 30000);
+    setInterval(user_count, 3000);
     user_count();
 });
