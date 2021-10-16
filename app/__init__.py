@@ -15,7 +15,7 @@ try:
     from flask_session import Session
     this_dir = os.path.dirname(os.path.abspath(__file__))
     SESSION_TYPE = 'filesystem'
-    SESSION_FILE_DIR = this_dir + '/thesessions'
+    SESSION_FILE_DIR = this_dir + '/thesessions' # '/../thesessions'? TODO
     SESSION_COOKIE_NAME = 'flasksessionid'
     app.config.from_object(__name__)
     #app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
