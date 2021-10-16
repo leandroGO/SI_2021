@@ -250,9 +250,11 @@ body {
 
 #fin_compra {
     text-decoration:none;
-    color:black;
+    font-weight:700;
+    color:white;
     background-color:rgb(14,82,10); 
     padding:5px;
+    transition: 0.3s;
 }
 
 #fin_compra:hover {

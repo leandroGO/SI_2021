@@ -1,7 +1,9 @@
 function user_count() {
-    xmlhttp = new XMLHttpRequest();
+    var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
-        document.getElementById("footer").innerHTML = xmlhttp.responseText;
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("footer").innerHTML = xmlhttp.responseText;
+        }
     };
     xmlhttp.open("GET", "/ajax", true);
     xmlhttp.send();

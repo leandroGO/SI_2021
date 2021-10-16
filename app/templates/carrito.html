@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% if lista|length > 0 %}
-		<div id="lista_carrito">
-			<h2>Carrito</h2>
-			<ul>
-			{% for elem in lista %}
-				<li>
-					<a class="pelicula_carrito" href="/pelicula/{{elem[0]}}">{{elem[2]}}</a> (x{{elem[1]}}) - {% if elem[1] > 1 %}<a class="quitar" href = "/sub/{{elem[0]}}">Quitar uno</a> / {% endif %} <a class="quitar" href="/delete/{{elem[0]}}">Eliminar todos</a>
-				</li>
-			{% endfor %}
-			</ul>
+{% if lista|length > 0 %}
+<div id="lista_carrito">
+  <h2>Carrito</h2>
+  <ul>
+    {% for elem in lista %}
+    <li>
+      <a class="pelicula_carrito" href="/pelicula/{{elem[0]}}">{{elem[2]}}</a> (x{{elem[1]}}) - {% if elem[1] > 1 %}<a class="quitar" href = "/sub/{{elem[0]}}">Quitar uno</a> / {% endif %} <a class="quitar" href="/delete/{{elem[0]}}">Eliminar todos</a>
+    </li>
+    {% endfor %}
+  </ul>
 
-			<a id="fin_compra" href='/buy'>Finalizar compra</a>
-		</div>
-	{% else %}
-		No hay ninguna pelicula en el carrito
-	{% endif %}
+  <a id="fin_compra" href='/buy'>Finalizar compra</a>
+</div>
+{% else %}
+<p>No hay ninguna película en el carrito</p>
+{% endif %}
 {% endblock %}
