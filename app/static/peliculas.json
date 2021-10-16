@@ -125,9 +125,11 @@
       "poster": "caratula.jpg",
       "director": "Galder Gaztelu-Urrutia",
       "precio": 18.99,
-      "categoria": "Ciencia ficcion",
+      "categoria": "Ciencia ficción",
       "anno": 2019,
       "actores": ["Iván Massagué", "Alexandra Masangkay", "Zorion Eguileor"]
     }
-  }
+  },
+
+  "generos": ["Comedia", "Ciencia ficción", "Terror", "Acción", "Musical", "Drama", "Romántica"]
 }

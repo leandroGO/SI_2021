@@ -25,8 +25,9 @@
           <input type="text" name="busqueda">
           <select name="genero">
             <option value="todas">Todas</option>
-            <option value="accion">Acción</option>
-            <option value="comedia">Comedia</option>
+            {% for genero in generos %}
+              <option value="{{genero}}">{{genero}}</option>
+            {% endfor %}
           </select>
           <input type="submit" value="Buscar">
         </form>
