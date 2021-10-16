@@ -14,25 +14,27 @@ def home():
     lista = []
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
-        peliculas = json.load(json_data)["peliculas"]
+        data = json.load(json_data)
+        peliculas = data["peliculas"]
+        generos = data["generos"]
 
     if request.method == "POST":
         data = request.form
 
         if data["genero"] == "todas":
-            for pelicula in peliculas.keys():
+            for pelicula in peliculas:
                 if data["busqueda"].lower() in peliculas[pelicula]["titulo"].lower():
                     lista.append((peliculas[pelicula]["titulo"], pelicula))
         else:
-           for pelicula in peliculas.keys():
-                if data["busqueda"] in peliculas[pelicula]["titulo"] and peliculas[pelicula]["categoria"].lower() == data["genero"]:
+           for pelicula in peliculas:
+                if data["busqueda"].lower() in peliculas[pelicula]["titulo"].lower() and peliculas[pelicula]["categoria"] == data["genero"]:
                     lista.append((peliculas[pelicula]["titulo"], pelicula))
 
     else:
         for pelicula in peliculas.keys():
             lista.append((peliculas[pelicula]["titulo"], pelicula))
 
-    return render_template("lista_peliculas.html", lista=lista)
+    return render_template("lista_peliculas.html", generos=generos, lista=lista)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -40,6 +42,9 @@ def login():
     update_cookie = False
     if "usuario" in session:
         return redirect('/')
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path) as json_data:
+        generos = json.load(json_data)["generos"]
 
     if request.method == 'GET': # El cliente solicita el formulario
         session["url_previo"] = request.referrer
@@ -48,14 +53,15 @@ def login():
             username = last_username
         else:
             username = None
-        return render_template("login.html", username=username)
+
+        return render_template("login.html", generos=generos, username=username)
 
     # if request.method == 'POST'
     if "user" in request.form:
         username = request.form["user"]
         user_path = os.path.join(app.root_path, "../usuarios/" + username)
         if not os.path.exists(user_path):
-            return render_template("login.html",
+            return render_template("login.html", generos=generos,
                                    error=f"El usuario {username} no existe")
 
         user_data_path = os.path.join(user_path, "datos.dat")
@@ -67,7 +73,7 @@ def login():
             salt = user_data["salt"]
             h = hashlib.blake2b(salt + submitted_password.encode('utf-8'))
             if h.hexdigest() != user_data["password_salted_hash"]:
-                return render_template("login.html", username=username,
+                return render_template("login.html", generos=generos, username=username,
                                        error=f"Contraseña incorrecta")
 
             session["usuario"] = user_data["name"]
@@ -94,7 +100,10 @@ def register():
         return redirect('/')
 
     if request.method == 'GET':
-        return render_template("registro.html")
+        path = os.path.join(app.root_path, "static/peliculas.json")
+        with open(path) as json_data:
+            generos = json.load(json_data)["generos"]
+        return render_template("registro.html", generos=generos)
 
     # if request.method == 'POST'
     if "reg_user" in request.form:
@@ -142,7 +151,9 @@ def logout():
 def detalle(id):
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
-        peliculas = json.load(json_data)["peliculas"]
+        data = json.load(json_data)
+        peliculas = data["peliculas"]
+        generos = data["generos"]
 
     pelicula = peliculas[str(id)]
 
@@ -153,7 +164,7 @@ def detalle(id):
     return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
             director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
             precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]),
-            id=str(id))
+            id=str(id), generos=generos)
 
 
 @app.route('/carrito')
@@ -166,12 +177,14 @@ def carrito():
 
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
-        peliculas = json.load(json_data)["peliculas"]
+        data = json.load(json_data)
+        peliculas = data["peliculas"]
+        generos = data["generos"]
 
     for item in lista.keys():
         context.append((item, lista[item], peliculas[item]["titulo"]))
     print(context)
-    return render_template("carrito.html", lista=context)
+    return render_template("carrito.html", generos=generos, lista=context)
 
 @app.route('/add/<int:id>')
 def add(id):
@@ -226,14 +239,16 @@ def buy():
 
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
-        peliculas = json.load(json_data)["peliculas"]
+        data = json.load(json_data)
+        peliculas = data["peliculas"]
+        geenros = data["generos"]
 
     count = 0
     for pelicula in session["carrito"]:
         count += peliculas[pelicula]["precio"] * session["carrito"][pelicula]
 
     session["subtotal"] = count
-    return render_template("pago.html", precio=count, saldo=saldo, puntos=puntos)
+    return render_template("pago.html", generos=generos, precio=count, saldo=saldo, puntos=puntos)
 
 @app.route('/saldo')
 def saldo():
@@ -305,7 +320,10 @@ def historial():
     else:
         historial = dict()
 
-    return render_template("historial.html", historial=historial)
+    path = os.path.join(app.root_path, "static/peliculas.json")
+    with open(path) as json_data:
+        generos = json.load(json_data)["generos"]
+    return render_template("historial.html", generos=generos, historial=historial)
 
 @app.route('/ajax')
 def user_count():
