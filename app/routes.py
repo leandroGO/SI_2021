@@ -126,7 +126,7 @@ def register():
         user_data["email"] = request.form["reg_email"]
         user_data["tarjeta"] = request.form["reg_tarjeta"]
         user_data["direccion"] = request.form["reg_direccion"]
-        user_data["saldo"] = 20000 #randrange(101)
+        user_data["saldo"] = randrange(101)
         user_data["puntos"] = 0
 
         salt = os.urandom(16)
@@ -134,9 +134,7 @@ def register():
         h = hashlib.blake2b(salt + request.form["reg_password"].encode('utf-8'))
         user_data["password_salted_hash"] = h.hexdigest()
 
-        user_data_path = os.path.join(user_path, "datos.dat")
-        with open(user_data_path, 'wb') as f:
-            pickle.dump(user_data, f)
+        guardar_datos_usuario(username, user_data)
 
     return redirect('/') # TODO: hacer que vaya a la página previa (referral)
 
@@ -230,10 +228,7 @@ def buy():
 
     # Usuario con sesion iniciada
     username = session["usuario"]
-    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "rb") as f:
-        user_data = pickle.load(f)
-
+    user_data = cargar_datos_usuario(username)
     saldo = user_data["saldo"]
     puntos = user_data["puntos"]
 
@@ -241,7 +236,7 @@ def buy():
     with open(path) as json_data:
         data = json.load(json_data)
         peliculas = data["peliculas"]
-        geenros = data["generos"]
+        generos = data["generos"]
 
     count = 0
     for pelicula in session["carrito"]:
@@ -259,10 +254,7 @@ def saldo():
         return redirect("/")
 
     username = session["usuario"]
-
-    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "rb") as f:
-        user_data = pickle.load(f)
+    user_data = cargar_datos_usuario(username)
 
     # Actualizacion saldo
     if session["subtotal"] > user_data["saldo"]:
@@ -273,9 +265,7 @@ def saldo():
     # Actualizacion puntos
     user_data["puntos"] += session["subtotal"]*5
 
-    with open(path, "wb") as f:
-        pickle.dump(user_data, f)
-
+    guardar_datos_usuario(username, user_data)
     return guardar_compra()
 
 @app.route('/puntos')
@@ -287,10 +277,7 @@ def puntos():
         return redirect("/")
 
     username = session["usuario"]
-
-    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "rb") as f:
-        user_data = pickle.load(f)
+    user_data = cargar_datos_usuario(username)
 
     # Actualizacion saldo
     if session["subtotal"]*100 > user_data["puntos"]:
@@ -306,7 +293,7 @@ def puntos():
 
     return guardar_compra()
 
-@app.route('/historial')
+@app.route('/historial', methods=['GET', 'POST'])
 def historial():
     if "usuario" not in session:
         return redirect("/login")
@@ -323,7 +310,18 @@ def historial():
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         generos = json.load(json_data)["generos"]
-    return render_template("historial.html", generos=generos, historial=historial)
+
+    user_data = cargar_datos_usuario(username)
+    if request.method == 'POST' and "incremento" in request.form:
+        user_data["saldo"] += float(request.form["incremento"])
+        guardar_datos_usuario(username, user_data)
+
+    saldo = user_data["saldo"]
+    tarjeta = user_data["tarjeta"]
+    tarjeta_ofuscada = tarjeta[-4:].rjust(len(tarjeta), '*')
+    return render_template("historial.html", generos=generos,
+                           historial=historial, saldo=saldo,
+                           tarjeta=tarjeta_ofuscada)
 
 @app.route('/ajax')
 def user_count():
@@ -359,3 +357,17 @@ def guardar_compra():
     session.pop("carrito")
 
     return redirect('/historial')
+
+def cargar_datos_usuario(username):
+    '''Carga los datos de un usuario existente (no usar en otro caso)'''
+    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
+    with open(path, "rb") as f:
+        user_data = pickle.load(f)
+
+    return user_data
+
+def guardar_datos_usuario(username, user_data):
+    '''Guarda los datos de un usuario existente (no usar en otro caso)'''
+    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
+    with open(path, "wb") as f:
+        pickle.dump(user_data, f)

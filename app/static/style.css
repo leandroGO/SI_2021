@@ -243,6 +243,10 @@ body {
     background-color:rgba(128, 128, 128, 0.2);
 }
 
+#saldo_info {
+    margin: 5px;
+}
+
 /* Carrito */
 #lista_carrito {
     margin:7px;
