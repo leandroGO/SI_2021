@@ -241,7 +241,7 @@ def buy():
     with open(path) as json_data:
         data = json.load(json_data)
         peliculas = data["peliculas"]
-        geenros = data["generos"]
+        generos = data["generos"]
 
     count = 0
     for pelicula in session["carrito"]:
