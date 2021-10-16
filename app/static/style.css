@@ -247,12 +247,12 @@ body {
     margin: 5px;
 }
 
-/* Carrito */
+/* Carrito y pago */
 #lista_carrito {
     margin:7px;
 }
 
-#fin_compra {
+.boton_pago {
     text-decoration:none;
     font-weight:700;
     color:white;
@@ -261,7 +261,7 @@ body {
     transition: 0.3s;
 }
 
-#fin_compra:hover {
+.boton_pago:hover {
     text-decoration:none;
     background-color:orange;
     padding:5px;
@@ -290,4 +290,8 @@ body {
 .pelicula_carrito {
     text-decoration:none;
     color:black;
+}
+
+#div_pago {
+    margin:7px;
 }

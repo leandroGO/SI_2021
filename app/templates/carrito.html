@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if lista|length > 0 %}
 <div id="lista_carrito">
+	{% if lista|length > 0 %}
   <h2>Carrito</h2>
   <ul>
     {% for elem in lista %}
@@ -12,9 +12,9 @@
     {% endfor %}
   </ul>
 
-  <a id="fin_compra" href='/buy'>Finalizar compra</a>
+  <a class="boton_pago" href='/buy'>Finalizar compra</a>
+  {% else %}
+    <p>No hay ninguna película en el carrito</p>
+  {% endif %}
 </div>
-{% else %}
-<p>No hay ninguna película en el carrito</p>
-{% endif %}
 {% endblock %}
