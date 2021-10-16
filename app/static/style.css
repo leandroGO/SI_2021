@@ -242,3 +242,46 @@ body {
 .detalle_compra table tr:nth-child(even) {
     background-color:rgba(128, 128, 128, 0.2);
 }
+
+/* Carrito */
+#lista_carrito {
+    margin:7px;
+}
+
+#fin_compra {
+    text-decoration:none;
+    color:black;
+    background-color:rgb(14,82,10); 
+    padding:5px;
+}
+
+#fin_compra:hover {
+    text-decoration:none;
+    background-color:orange;
+    padding:5px;
+}
+
+#lista_carrito ul {
+    margin-bottom:15px;
+}
+
+#lista_carrito li {
+    padding:3px;
+}
+
+.quitar {
+    text-decoration:none;
+    color:blue;
+
+    padding:1px;
+}
+
+.quitar:hover {
+    background-color:orange; 
+    color:black;
+}
+
+.pelicula_carrito {
+    text-decoration:none;
+    color:black;
+}
