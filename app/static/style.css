@@ -295,3 +295,10 @@ body {
 #div_pago {
     margin:7px;
 }
+
+
+/* Error */
+#error {
+    margin-top:20px;
+    text-align:center;
+}
