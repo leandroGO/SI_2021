@@ -21,20 +21,24 @@ def home():
     if request.method == "POST":
         data = request.form
 
+        titulo_buscado = data["busqueda"].lower()
         if data["genero"] == "todas":
             for pelicula in peliculas:
-                if data["busqueda"].lower() in peliculas[pelicula]["titulo"].lower():
+                if titulo_buscado in peliculas[pelicula]["titulo"].lower():
                     lista.append((peliculas[pelicula]["titulo"], pelicula))
         else:
-           for pelicula in peliculas:
-                if data["busqueda"].lower() in peliculas[pelicula]["titulo"].lower() and peliculas[pelicula]["categoria"] == data["genero"]:
+            for pelicula in peliculas:
+                categoria_pelicula = peliculas[pelicula]["categoria"]
+                if (titulo_buscado in peliculas[pelicula]["titulo"].lower()
+                        and categoria_pelicula == data["genero"]):
                     lista.append((peliculas[pelicula]["titulo"], pelicula))
 
     else:
         for pelicula in peliculas.keys():
             lista.append((peliculas[pelicula]["titulo"], pelicula))
 
-    return render_template("lista_peliculas.html", generos=generos, lista=lista)
+    return render_template("lista_peliculas.html", generos=generos,
+                           lista=lista)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -46,7 +50,7 @@ def login():
     with open(path) as json_data:
         generos = json.load(json_data)["generos"]
 
-    if request.method == 'GET': # El cliente solicita el formulario
+    if request.method == 'GET':  # El cliente solicita el formulario
         session["url_previo"] = request.referrer
         last_username = request.cookies.get("last_username")
         if last_username:
@@ -54,7 +58,8 @@ def login():
         else:
             username = None
 
-        return render_template("login.html", generos=generos, username=username)
+        return render_template("login.html", generos=generos,
+                               username=username)
 
     # if request.method == 'POST'
     if "user" in request.form:
@@ -64,27 +69,26 @@ def login():
             return render_template("login.html", generos=generos,
                                    error=f"El usuario {username} no existe")
 
-        user_data_path = os.path.join(user_path, "datos.dat")
-        with open(user_data_path, 'rb') as f:
-            user_data = pickle.load(f)
+        user_data = cargar_datos_usuario(username)
 
         if "password" in request.form:
             submitted_password = request.form["password"]
             salt = user_data["salt"]
             h = hashlib.blake2b(salt + submitted_password.encode('utf-8'))
             if h.hexdigest() != user_data["password_salted_hash"]:
-                return render_template("login.html", generos=generos, username=username,
-                                       error=f"Contraseña incorrecta")
+                return render_template("login.html", generos=generos,
+                                       username=username,
+                                       error="Contraseña incorrecta")
 
             session["usuario"] = user_data["name"]
             update_cookie = True
 
-    if "url_origen" in session: # url a la que volver a toda costa
-        url_destino = session["url_origen"]
-    elif "url_previo" in session:
+    if "url_previo" in session and session["url_previo"] is not None:
         url_destino = session["url_previo"]
-    else:
+    elif request.referrer is not None:
         url_destino = request.referrer
+    else:
+        url_destino = '/'
 
     response = make_response(redirect(url_destino))
 
@@ -131,12 +135,14 @@ def register():
 
         salt = os.urandom(16)
         user_data["salt"] = salt
-        h = hashlib.blake2b(salt + request.form["reg_password"].encode('utf-8'))
+        h = hashlib.blake2b(salt +
+                            request.form["reg_password"].encode('utf-8'))
         user_data["password_salted_hash"] = h.hexdigest()
 
         guardar_datos_usuario(username, user_data)
 
-    return redirect('/') # TODO: hacer que vaya a la página previa (referral)
+    return redirect('/login')
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -159,10 +165,15 @@ def detalle(id):
     for actor in pelicula["actores"]:
         reparto += ", {}".format(actor)
 
-    return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
-            director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
-            precio=pelicula["precio"], img=url_for('static', filename="images/"+pelicula["poster"]),
-            id=id, generos=generos)
+    return render_template("detalle.html", titulo=pelicula["titulo"],
+                           anno=pelicula["anno"],
+                           director=pelicula["director"],
+                           reparto=reparto[2:],
+                           categoria=pelicula["categoria"],
+                           precio=pelicula["precio"],
+                           img=url_for('static', filename="images/" +
+                                       pelicula["poster"]),
+                           id=id, generos=generos)
 
 
 @app.route('/carrito')
@@ -183,6 +194,7 @@ def carrito():
         context.append((item, lista[item], peliculas[item]["titulo"]))
     print(context)
     return render_template("carrito.html", generos=generos, lista=context)
+
 
 @app.route('/add/<string:id>')
 def add(id):
@@ -211,13 +223,17 @@ def add(id):
     session.modified = True
     return redirect('/carrito')
 
+
 @app.route('/sub/<string:id>')
 def sub(id):
-    if "carrito" in session and id in session["carrito"] and session["carrito"][id] > 1:
+    if ("carrito" in session
+            and id in session["carrito"]
+            and session["carrito"][id] > 1):
         session["carrito"][id] -= 1
         session.modified = True
 
     return redirect('/carrito')
+
 
 @app.route('/delete/<string:id>')
 def delete(id):
@@ -226,6 +242,7 @@ def delete(id):
         session.modified = True
 
     return redirect('/carrito')
+
 
 @app.route('/buy')
 def buy():
@@ -252,7 +269,9 @@ def buy():
         count += peliculas[pelicula]["precio"] * session["carrito"][pelicula]
 
     session["subtotal"] = count
-    return render_template("pago.html", generos=generos, precio=count, saldo=saldo, puntos=puntos)
+    return render_template("pago.html", generos=generos, precio=count,
+                           saldo=saldo, puntos=puntos)
+
 
 @app.route('/saldo')
 def saldo():
@@ -276,10 +295,11 @@ def saldo():
     user_data["saldo"] -= session["subtotal"]
 
     # Actualizacion puntos
-    user_data["puntos"] += session["subtotal"]*5
+    user_data["puntos"] += int(session["subtotal"]*5)
 
     guardar_datos_usuario(username, user_data)
     return guardar_compra()
+
 
 @app.route('/puntos')
 def puntos():
@@ -300,15 +320,14 @@ def puntos():
     if session["subtotal"]*100 > user_data["puntos"]:
         return redirect("/")
 
-    user_data["puntos"] -= session["subtotal"]*100
+    user_data["puntos"] -= int(session["subtotal"]*100)
 
     # Actualizacion puntos
-    user_data["puntos"] += session["subtotal"]*5
+    user_data["puntos"] += int(session["subtotal"]*5)
 
-    with open(path, "wb") as f:
-        pickle.dump(user_data, f)
-
+    guardar_datos_usuario(username, user_data)
     return guardar_compra()
+
 
 @app.route('/historial', methods=['GET', 'POST'])
 def historial():
@@ -316,7 +335,8 @@ def historial():
         return redirect("/login")
 
     username = session["usuario"]
-    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
+    path = os.path.join(app.root_path, "../usuarios/", username,
+                        "historial.json")
 
     if os.path.exists(path):
         with open(path, "r") as f:
@@ -336,9 +356,11 @@ def historial():
     saldo = user_data["saldo"]
     tarjeta = user_data["tarjeta"]
     tarjeta_ofuscada = tarjeta[-4:].rjust(len(tarjeta), '*')
+    puntos = int(user_data["puntos"])   # Por si acaso, debería ser entero
     return render_template("historial.html", generos=generos,
-                           historial=historial, saldo=saldo,
+                           historial=historial, saldo=saldo, puntos=puntos,
                            tarjeta=tarjeta_ofuscada)
+
 
 @app.route('/ajax')
 def user_count():
@@ -354,7 +376,8 @@ def guardar_compra():
 
     username = session["usuario"]
 
-    path = os.path.join(app.root_path, "../usuarios/", username, "historial.json")
+    path = os.path.join(app.root_path, "../usuarios/", username,
+                        "historial.json")
     if os.path.exists(path):
         with open(path, "r") as f:
             historial = json.load(f)
@@ -365,8 +388,10 @@ def guardar_compra():
     subtotal = session["subtotal"]
     compra = []
     for item in session["carrito"]:
-        compra.append((peliculas[item]["titulo"], peliculas[item]["precio"], session["carrito"][item]))
-    historial[datetime.now().strftime("%Y-%m-%d (%H:%M:%S)")] = (subtotal, compra)
+        compra.append((peliculas[item]["titulo"], peliculas[item]["precio"],
+                       session["carrito"][item]))
+    historial[datetime.now().strftime("%Y-%m-%d (%H:%M:%S)")] = (subtotal,
+                                                                 compra)
 
     with open(path, "w") as f:
         json.dump(historial, f)
@@ -375,6 +400,7 @@ def guardar_compra():
 
     return redirect('/historial')
 
+
 def cargar_datos_usuario(username):
     '''Carga los datos de un usuario existente (no usar en otro caso)'''
     path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
@@ -382,6 +408,7 @@ def cargar_datos_usuario(username):
         user_data = pickle.load(f)
 
     return user_data
+
 
 def guardar_datos_usuario(username, user_data):
     '''Guarda los datos de un usuario existente (no usar en otro caso)'''
