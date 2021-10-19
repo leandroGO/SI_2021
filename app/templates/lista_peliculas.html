@@ -2,6 +2,9 @@
 
 {% block content %}
 
+{% if not lista %}
+<p> No se han encontrado resultados </p>
+{% else %}
 {% for elem in lista %}
   <div class='pelicula' title='{{elem[0]}}'>
     <a href="/pelicula/{{elem[1]}}">
@@ -12,5 +15,6 @@
     </a>
   </div>
 {% endfor %}
+{% endif %}
 
 {% endblock %}
