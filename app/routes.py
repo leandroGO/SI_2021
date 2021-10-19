@@ -161,7 +161,7 @@ def detalle(id):
 
     return render_template("detalle.html", titulo=pelicula["titulo"], anno=pelicula["anno"],
             director=pelicula["director"], reparto=reparto[2:], categoria=pelicula["categoria"],
-            precio=pelicula["precio"], img=url_for('static', filename=pelicula["poster"]),
+            precio=pelicula["precio"], img=url_for('static', filename="images/"+pelicula["poster"]),
             id=id, generos=generos)
 
 
