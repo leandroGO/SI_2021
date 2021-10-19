@@ -194,6 +194,21 @@ body {
     border:none;
 }
 
+#anadir_carro {
+    text-decoration:none;
+    font-weight:700;
+    color:white;
+    background-color:rgb(14,82,10); 
+    padding:5px;
+    transition: 0.3s;
+}
+
+#anadir_carro:hover {
+    text-decoration:none;
+    background-color:orange;
+    padding:5px;
+}
+
 /* Historial */
 .historial {
     width:90%;
