@@ -25,7 +25,8 @@ def home():
         if data["genero"] == "todas":
             for pelicula in peliculas:
                 if titulo_buscado in peliculas[pelicula]["titulo"].lower():
-                    url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
+                    url = url_for("static", filename="images/" +
+                                  peliculas[pelicula]["poster"])
                     link = url_for("pelicula", id=pelicula)
                     lista.append((peliculas[pelicula]["titulo"], link, url))
         else:
@@ -33,13 +34,15 @@ def home():
                 categoria_pelicula = peliculas[pelicula]["categoria"]
                 if (titulo_buscado in peliculas[pelicula]["titulo"].lower()
                         and categoria_pelicula == data["genero"]):
-                    url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
+                    url = url_for("static", filename="images/" +
+                                  peliculas[pelicula]["poster"])
                     link = url_for("pelicula", id=pelicula)
                     lista.append((peliculas[pelicula]["titulo"], link, url))
 
     else:
         for pelicula in peliculas.keys():
-            url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
+            url = url_for("static", filename="images/" +
+                          peliculas[pelicula]["poster"])
             link = url_for("pelicula", id=pelicula)
             lista.append((peliculas[pelicula]["titulo"], link, url))
 
