@@ -26,19 +26,22 @@ def home():
             for pelicula in peliculas:
                 if titulo_buscado in peliculas[pelicula]["titulo"].lower():
                     url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
-                    lista.append((peliculas[pelicula]["titulo"], pelicula, url))
+                    link = url_for("pelicula", id=pelicula)
+                    lista.append((peliculas[pelicula]["titulo"], link, url))
         else:
             for pelicula in peliculas:
                 categoria_pelicula = peliculas[pelicula]["categoria"]
                 if (titulo_buscado in peliculas[pelicula]["titulo"].lower()
                         and categoria_pelicula == data["genero"]):
                     url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
-                    lista.append((peliculas[pelicula]["titulo"], pelicula, url))
+                    link = url_for("pelicula", id=pelicula)
+                    lista.append((peliculas[pelicula]["titulo"], link, url))
 
     else:
         for pelicula in peliculas.keys():
             url = url_for("static", filename="images/"+peliculas[pelicula]["poster"])
-            lista.append((peliculas[pelicula]["titulo"], pelicula, url))
+            link = url_for("pelicula", id=pelicula)
+            lista.append((peliculas[pelicula]["titulo"], link, url))
 
     return render_template("lista_peliculas.html", generos=generos,
                            lista=lista)
@@ -48,7 +51,7 @@ def home():
 def login():
     update_cookie = False
     if "usuario" in session:
-        return redirect('/')
+        return redirect(url_for('home'))
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         generos = json.load(json_data)["generos"]
@@ -104,7 +107,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if "usuario" in session:
-        return redirect('/')
+        return redirect(url_for('home'))
 
     if request.method == 'GET':
         path = os.path.join(app.root_path, "static/peliculas.json")
@@ -144,18 +147,18 @@ def register():
 
         guardar_datos_usuario(username, user_data)
 
-    return redirect('/login')
+    return redirect(url_for('login'))
 
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop("usuario", None)
     session.pop("carrito", None)
-    return redirect('/')
+    return redirect(url_for('home'))
 
 
 @app.route('/pelicula/<string:id>')
-def detalle(id):
+def pelicula(id):
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         data = json.load(json_data)
@@ -224,7 +227,7 @@ def add(id):
         session["carrito"][id] += 1
 
     session.modified = True
-    return redirect('/carrito')
+    return redirect(url_for('carrito'))
 
 
 @app.route('/sub/<string:id>')
@@ -235,7 +238,7 @@ def sub(id):
         session["carrito"][id] -= 1
         session.modified = True
 
-    return redirect('/carrito')
+    return redirect(url_for('carrito'))
 
 
 @app.route('/delete/<string:id>')
@@ -244,7 +247,7 @@ def delete(id):
         session["carrito"].pop(id)
         session.modified = True
 
-    return redirect('/carrito')
+    return redirect(url_for('carrito'))
 
 
 @app.route('/buy')
@@ -256,7 +259,7 @@ def buy():
         generos = data["generos"]
 
     if "usuario" not in session:
-        return redirect("/login")
+        return redirect(url_for('login'))
 
     if "carrito" not in session or len(session["carrito"]) == 0:
         return render_template("error.html", generos=generos)
@@ -283,7 +286,7 @@ def saldo():
         generos = json.load(json_data)["generos"]
 
     if "usuario" not in session:
-        return redirect("/login")
+        return redirect(url_for('login'))
 
     if "carrito" not in session or "subtotal" not in session:
         return render_template("error.html", generos=generos)
@@ -293,7 +296,7 @@ def saldo():
 
     # Actualizacion saldo
     if session["subtotal"] > user_data["saldo"]:
-        return redirect("/")
+        return redirect(url_for('home'))
 
     user_data["saldo"] -= session["subtotal"]
 
@@ -311,7 +314,7 @@ def puntos():
         generos = json.load(json_data)["generos"]
 
     if "usuario" not in session:
-        return redirect("/login")
+        return redirect(url_for('login'))
 
     if "carrito" not in session or "subtotal" not in session:
         return render_template("error.html", generos=generos)
@@ -321,7 +324,7 @@ def puntos():
 
     # Actualizacion saldo
     if session["subtotal"]*100 > user_data["puntos"]:
-        return redirect("/")
+        return redirect(url_for('home'))
 
     user_data["puntos"] -= int(session["subtotal"]*100)
 
@@ -335,7 +338,7 @@ def puntos():
 @app.route('/historial', methods=['GET', 'POST'])
 def historial():
     if "usuario" not in session:
-        return redirect("/login")
+        return redirect(url_for('login'))
 
     username = session["usuario"]
     path = os.path.join(app.root_path, "../usuarios/", username,
@@ -366,7 +369,7 @@ def historial():
 
 
 @app.route('/ajax')
-def user_count():
+def ajax():
     nusers = randrange(1000)
     return "{} usuarios conectados".format(nusers)
 
@@ -401,7 +404,7 @@ def guardar_compra():
 
     session.pop("carrito")
 
-    return redirect('/historial')
+    return redirect(url_for('historial'))
 
 
 def cargar_datos_usuario(username):
