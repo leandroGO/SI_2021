@@ -7,14 +7,14 @@
         <h2>Puntos: {{puntos|round(0)|int}}</h2>
         <br>
         {% if saldo >= precio %}
-            <a class="boton_pago" href='/saldo'>Comprar con saldo de cuenta</a>
+            <a class="boton_pago" href="{{url_for('saldo')}}">Comprar con saldo de cuenta</a>
         {% endif %}
         {% if puntos >= precio*100 %}
-            <a class="boton_pago" href='/puntos'>Comprar con puntos</a>
+            <a class="boton_pago" href="{{url_for('puntos')}}">Comprar con puntos</a>
         {% endif %}
         {% if precio > saldo and precio*100 > puntos %}
             No dispone de saldo ni puntos con los que realizar el pago
-            (<a href='/historial'>aumentar saldo</a>)
+            (<a href="{{url_for('historial')}}">aumentar saldo</a>)
         {% endif %}
     </div>
 {% endblock %}

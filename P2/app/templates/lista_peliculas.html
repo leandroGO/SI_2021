@@ -7,7 +7,7 @@
 {% else %}
 {% for elem in lista %}
   <div class='pelicula' title='{{elem[0]}}'>
-    <a href="/pelicula/{{elem[1]}}">
+    <a href="{{elem[1]}}">
       <img class='pelicula-img' src="{{elem[2]}}">
       <div class='pelicula-titulo'>
         <p>{{elem[0]}}</p>
