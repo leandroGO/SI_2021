@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="saldo_info">
+  <p><strong>Saldo actual: </strong>{{saldo|round(2)}}€</p>
+  <form method="POST">
+    <label for="incremento"><strong>Aumentar saldo</strong> ({{tarjeta}}):</label>
+    <input name="incremento" id="incremento" type="number" min="0.01" step="0.01" required>
+    <input type="submit" value="Actualizar saldo">
+  </form>
+  <p><strong>Puntos: </strong>{{puntos}}</p>
+</div>
+{% if historial|length > 0 %} 
+<table class="historial">
+  <tr>
+    <th><h2>Fecha</h2></th>
+    <th><h2>Importe</h2></th>
+  </tr>
+  {% for fecha in historial %}
+  <tr>
+    <td>{{fecha}}
+      <div class="detalle_compra">
+        <!-- Tabla de detalle de compra -->
+        <table>
+          {% for pelicula in historial[fecha][1] %}
+          <tr>
+            <td>{{pelicula[0]}}</td>
+            <td>{{pelicula[2]}} x {{pelicula[1]|round(2)}}€</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </td>
+    <td>{{historial[fecha][0]|round(2)}}€</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No se ha realizado ninguna compra</p>
+{% endif %}
+{% endblock %}

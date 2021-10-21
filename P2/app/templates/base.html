@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <title>VideoClub</title>
+  <link rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static', filename='style.css')}}"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="{{url_for('static', filename='scripts/password_strength.js')}}"></script>
+  <script src="{{url_for('static', filename='scripts/user_count.js')}}"></script>
+  <script src="{{url_for('static', filename='scripts/registro_validation.js')}}"></script>
+  <script src="{{url_for('static', filename='scripts/detalle_compra.js')}}"></script>
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+    <h1>
+      <a href="/">
+      <img id="logo" src="{{url_for('static', filename='images/logo.png')}}">
+      VideoClub
+      </a>
+        <form id="searchbar" action="/" method="POST">
+          <input type="text" name="busqueda">
+          <select name="genero">
+            <option value="todas">Todas</option>
+            {% for genero in generos %}
+              <option value="{{genero}}">{{genero}}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="Buscar">
+        </form>
+    </h1>
+  </div>
+  <div id="menu">
+    <ul id="menu_list">
+      {% if session['usuario'] %}
+      <li id="username"><strong>Usuario:</strong> {{session['usuario']}}</li>
+      {% endif %}
+      <li><a class="item" href="/carrito">Carrito</a></li>
+      {% if not session["usuario"] %}
+      <li><a class="item" href="/login">Entrar</a></li>
+      <li><a class="item" href="/register">Registrarse</a></li>
+      {% else %}
+      <li><a class="item" href="/historial">Historial</a></li>
+      <li><a class="item" href="/logout">Salir</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <div id="footer">
+    Pie de página
+  </div>
+</div>
+
+</body>
+</html>

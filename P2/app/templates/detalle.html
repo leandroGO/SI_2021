@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<img id="detail_img" src="{{img}}">
+<div id="detail_text">
+  <h2>{{titulo}}</h2>
+  <ul>
+    <li>Año: {{anno}}</li>
+    <li>Director: {{director}}</li>
+    <li>Categoría: {{categoria}}</li>
+    <li>Reparto: {{reparto}}</li>
+  </ul>
+  <h3>Precio: {{precio}}€</h3>
+  <br>
+  <a id="anadir_carro" href="/add/{{id}}">Añadir al carrito</a>
+</div>
+{% endblock %}

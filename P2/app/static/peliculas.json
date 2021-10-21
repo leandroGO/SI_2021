@@ -1,0 +1,135 @@
+{
+  "peliculas": {
+    "1": {
+      "titulo": "Operación camarón",
+      "poster": "caratula.jpg",
+      "director": "Carlos Therón",
+      "precio": 18.99,
+      "categoria": "Comedia",
+      "anno": 2021,
+      "actores": ["Julián López", "Natalia de Molina"]
+    },
+
+    "2": {
+      "titulo": "A todo tren: destino Asturias",
+      "poster": "caratula.jpg",
+      "director": "Santiago Segura",
+      "precio": 18.99,
+      "categoria": "Comedia",
+      "anno": 2021,
+      "actores": ["Santiago Segura", "Leo Harlem", "David Guapo"]
+    },
+
+    "3": {
+      "titulo": "After: Almas Perdidas",
+      "poster": "caratula.jpg",
+      "director": "Castille Landon",
+      "precio": 18.99,
+      "categoria": "Romántica",
+      "anno": 2021,
+      "actores": ["Josephine Langford"]
+    },
+
+    "4": {
+      "titulo": "Torrente 5",
+      "poster": "caratula.jpg",
+      "director": "Santiago Segura",
+      "precio": 18.99,
+      "categoria": "Acción",
+      "anno": 2010,
+      "actores": ["Santiago Segura"]
+    },
+
+    "5": {
+      "titulo": "Padre no hay más que uno",
+      "poster": "caratula.jpg",
+      "director": "Santiago Segura",
+      "precio": 18.99,
+      "categoria": "Comedia",
+      "anno": 2019,
+      "actores": ["Santiago Segura", "Toni Acosta", "Silvia Abril"]
+    },
+
+    "6": {
+      "titulo": "It",
+      "poster": "caratula.jpg",
+      "director": "Andy Muschietti",
+      "precio": 18.99,
+      "categoria": "Terror",
+      "anno": 2017,
+      "actores": ["Bill Skarsgård", "Jaeden Martell"]
+    },
+
+    "7": {
+      "titulo": "The Room",
+      "poster": "caratula.jpg",
+      "director": "Tommy Wiseau",
+      "precio": 43.96,
+      "categoria": "Drama",
+      "anno": 2003,
+      "actores": ["Tommy Wiseau", "Juliette Danielle", "Greg Sestero"]
+    },
+
+    "8": {
+      "titulo": "Boyhood",
+      "poster": "caratula.jpg",
+      "director": "Richard Linklater",
+      "precio": 9.99,
+      "categoria": "Drama",
+      "anno": 2014,
+      "actores": ["Ellar Coltrane", "Patricia Arquette", "Ethan Hawke"]
+    },
+
+    "9": {
+      "titulo": "Jack and Jill",
+      "poster": "caratula.jpg",
+      "director": "Dennis Dugan",
+      "precio": 9.99,
+      "categoria": "Comedia",
+      "anno": 2011,
+      "actores": ["Adam Sandler", "Katie Holmes", "Al Pacino"]
+    },
+
+    "10": {
+      "titulo": "Batman v Superman: Dawn of Justice",
+      "poster": "caratula.jpg",
+      "director": "Zack Snyder",
+      "precio": 10.95,
+      "categoria": "Acción",
+      "anno": 2016,
+      "actores": ["Ben Affleck", "Henry Cavill", "Amy Adams", "Jesse Eisenberg", "Gal Gadot", "Lawrence Fishbourne"]
+    },
+
+    "11": {
+      "titulo": "Cats",
+      "poster": "caratula.jpg",
+      "director": "Tom Hooper",
+      "precio": 17.99,
+      "categoria": "Musical",
+      "anno": 2019,
+      "actores": ["Francesca Hayward", "Jennifer Hudson", "Judi Dench", "Taylor Swift", "Ian McKellen", "James Corden", "Idris Elba", "Jason Derulo"]
+    },
+
+    "12": {
+      "titulo": "Dragonball Evolution",
+      "poster": "caratula.jpg",
+      "director": "James Wong",
+      "precio": 3.95,
+      "categoria": "Acción",
+      "anno": 2009,
+      "actores": ["Justin Chatwin", "Chow Yun-Fat", "Emmy Rossum"]
+    },
+
+    "13": {
+      "titulo": "El hoyo",
+      "poster": "caratula.jpg",
+      "director": "Galder Gaztelu-Urrutia",
+      "precio": 18.99,
+      "categoria": "Ciencia ficción",
+      "anno": 2019,
+      "actores": ["Iván Massagué", "Alexandra Masangkay", "Zorion Eguileor"]
+    }
+  },
+
+  "generos": ["Comedia", "Ciencia ficción", "Terror", "Acción", "Musical", "Drama", "Romántica"]
+}

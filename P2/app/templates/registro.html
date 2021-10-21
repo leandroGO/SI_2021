@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex-container">
+
+<form id="register_form" method="POST" onsubmit="return regValidate()">
+  {% if error %}
+  <p class="error_msg">{{error}}</p><br>
+  {% endif %}
+
+  <label for="reg_user"> Usuario: </label>
+  <input type="text" name="reg_user" {% if form %} value="{{form['reg_user']}}" {% endif %} minlength='6' required><br>
+  <br>
+
+  <label for="reg_email"> Email: </label>
+  <input type="email" name="reg_email" {% if form %} value="{{form['reg_email']}}" {% endif %} required><br>
+  <br>
+
+  <label for="reg_password"> Contraseña: </label>
+  <input type="password" name="reg_password" required>
+  <br>
+  <span id="fuerza_password">Débil</span>
+  <br>
+
+  <label for="reg_confirm"> Confirmar contraseña: </label>
+  <input type="password" name="reg_confirm" required><br>
+  <br>
+
+  <label for="reg_tarjeta"> Tarjeta de crédito: </label>
+  <input type="text" minlength='16' maxlength='16' name="reg_tarjeta" {% if form %} value="{{form['reg_tarjeta']}}" {% endif %} required><br>
+  <br>
+
+  <label for="reg_direccion"> Dirección: </label>
+  <input type="text" maxlength='50' name="reg_direccion" {% if form %} value="{{form['reg_direccion']}}" {% endif %} required><br>
+  <br>
+
+  <input type="submit" value="Registrarse">
+</form>
+</div>
+
+{% endblock %}

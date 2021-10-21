@@ -1,0 +1,5 @@
+* 21/10: Diseño BD (actualiza.sql)
+* 28/10: || + Procedimientos + triggers
+* 04/11: Procedimients + triggers + integración
+* 11/11: Integración con el portal
+* 17/11 (miércoles hasta las 23:58): Integración con el portal
