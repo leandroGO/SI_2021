@@ -1,13 +1,13 @@
 {
   "peliculas": {
     "1": {
-      "titulo": "Operación camarón",
+      "titulo": "Operacion camaron",
       "poster": "caratula.jpg",
-      "director": "Carlos Therón",
+      "director": "Carlos Theron",
       "precio": 18.99,
       "categoria": "Comedia",
       "anno": 2021,
-      "actores": ["Julián López", "Natalia de Molina"]
+      "actores": ["Julian Lopez", "Natalia de Molina"]
     },
 
     "2": {
@@ -25,7 +25,7 @@
       "poster": "caratula.jpg",
       "director": "Castille Landon",
       "precio": 18.99,
-      "categoria": "Romántica",
+      "categoria": "Romantica",
       "anno": 2021,
       "actores": ["Josephine Langford"]
     },
@@ -35,13 +35,13 @@
       "poster": "caratula.jpg",
       "director": "Santiago Segura",
       "precio": 18.99,
-      "categoria": "Acción",
+      "categoria": "Accion",
       "anno": 2010,
       "actores": ["Santiago Segura"]
     },
 
     "5": {
-      "titulo": "Padre no hay más que uno",
+      "titulo": "Padre no hay mas que uno",
       "poster": "caratula.jpg",
       "director": "Santiago Segura",
       "precio": 18.99,
@@ -57,7 +57,7 @@
       "precio": 18.99,
       "categoria": "Terror",
       "anno": 2017,
-      "actores": ["Bill Skarsgård", "Jaeden Martell"]
+      "actores": ["Bill Skarsgard", "Jaeden Martell"]
     },
 
     "7": {
@@ -95,7 +95,7 @@
       "poster": "caratula.jpg",
       "director": "Zack Snyder",
       "precio": 10.95,
-      "categoria": "Acción",
+      "categoria": "Accion",
       "anno": 2016,
       "actores": ["Ben Affleck", "Henry Cavill", "Amy Adams", "Jesse Eisenberg", "Gal Gadot", "Lawrence Fishbourne"]
     },
@@ -115,7 +115,7 @@
       "poster": "caratula.jpg",
       "director": "James Wong",
       "precio": 3.95,
-      "categoria": "Acción",
+      "categoria": "Accion",
       "anno": 2009,
       "actores": ["Justin Chatwin", "Chow Yun-Fat", "Emmy Rossum"]
     },
@@ -125,11 +125,11 @@
       "poster": "caratula.jpg",
       "director": "Galder Gaztelu-Urrutia",
       "precio": 18.99,
-      "categoria": "Ciencia ficción",
+      "categoria": "Ciencia ficcion",
       "anno": 2019,
-      "actores": ["Iván Massagué", "Alexandra Masangkay", "Zorion Eguileor"]
+      "actores": ["Ivan Massague", "Alexandra Masangkay", "Zorion Eguileor"]
     }
   },
 
-  "generos": ["Comedia", "Ciencia ficción", "Terror", "Acción", "Musical", "Drama", "Romántica"]
+  "generos": ["Comedia", "Ciencia ficcion", "Terror", "Accion", "Musical", "Drama", "Romantica"]
 }

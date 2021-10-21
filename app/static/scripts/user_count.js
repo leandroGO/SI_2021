@@ -5,7 +5,8 @@ function user_count() {
             document.getElementById("footer").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/ajax", true);
+    url = document.getElementById("url").innerHTML
+    xmlhttp.open("GET", url, true);
     xmlhttp.send();
 }
 
