@@ -11,7 +11,7 @@
   <input type="text" name="user" {% if username %} value="{{username}}" {% endif %}required><br>
   <label> Contraseña: </label>
   <input type="password" name="password" required><br>
-  <label><a href="/register">Registrarse</a></label>
+  <label><a href="{{url_for('register')}}">Registrarse</a></label>
   <input type="submit" value="Entrar">
 </form>
 </div>

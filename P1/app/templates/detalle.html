@@ -12,6 +12,6 @@
   </ul>
   <h3>Precio: {{precio}}€</h3>
   <br>
-  <a id="anadir_carro" href="/add/{{id}}">Añadir al carrito</a>
+  <a id="anadir_carro" href="{{url_for('add', id=id)}}">Añadir al carrito</a>
 </div>
 {% endblock %}

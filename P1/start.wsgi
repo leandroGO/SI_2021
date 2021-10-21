@@ -8,7 +8,7 @@ activate_this = this_dir + '/si1pyenv/bin/activate_this.py'
 exec(open(activate_this).read(), dict(__file__=activate_this))
 # anhadir dir de este fichero a path
 sys.path.insert(0, this_dir)
-from hello import app as application
+from app import app as application
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
