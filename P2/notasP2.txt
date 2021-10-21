@@ -3,3 +3,7 @@
 * 04/11: Procedimients + triggers + integración
 * 11/11: Integración con el portal
 * 17/11 (miércoles hasta las 23:58): Integración con el portal
+
+La base de datos dada puede tener tablas con atributos redundantes, que le falten atributos, que las claves primarias/secundarias estén mal, que las relaciones en general estén mal, o que la propia tabla falte.
+
+En la tabla Customers puede haber clientes repetidos
