@@ -6,4 +6,21 @@
 
 La base de datos dada puede tener tablas con atributos redundantes, que le falten atributos, que las claves primarias/secundarias estén mal, que las relaciones en general estén mal, o que la propia tabla falte.
 
-En la tabla Customers puede haber clientes repetidos
+En la tabla Customers puede haber clientes repetidos.
+
+Ideas sueltas:
+* ¿Si la clave primaria de inventory es el product_id (PK de products), se puede añadir a products los atributos de inventory (podrían valer NULL para indicar que esos productos existen pero no están disponibles en la tienda [siquiera están contemplados con stock=0])?
+* ¿Llevar registro de número de ventas en inventory o hacer agregaciones de orderdetail?
+* ¿Habría que crear tablas para genres, languages o countries tales que las tablas correspondientes moviegenre, ..., sean relaciones muchos a muchos con movie?
+* En imdb_movies, el atributo year es de tipo text (debería ser otra cosa).
+* En imdb_actors, el atributo gender debería ser varying(1).
+* En customer, cambiar age por birthdate.
+* ¿Redundancia de country, region, state, city, zipcode en customer?
+* Asociar actors, movieactor y movie igual que directors y eso.
+* Asociar orderdetail como relación muchos a muchos entre order y product. Meter el price solo en product.
+* Asociar customer y orderdetail (customer_id FK en la segunda).
+* Hacer el campo status de orders de un tipo propio según la lista de status posibles del enunciado.
+* ¿El campo numpartitipation de directormovies debería (además de ser numparticipation) clave primaria?
+* ¿En customer, password debería ser char u otra cosa (guardamos el hash de la contraseña)?
+* ¿En customer, deberíamos conocer expiration date e income?
+* ¿En customer, address1 y address2 o atributo multivaluado?
