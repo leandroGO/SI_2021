@@ -1,3 +1,4 @@
-dropdb -U alumnodb si1
-createdb -U alumnodb si1
-gunzip -c dump_v1.4.sql.gz | psql –U alumnodb si1
+sudo systemctl restart postgresql
+dropdb si1 -U alumnodb
+createdb si1 -U alumnodb
+gunzip -c dump_v1.4.sql.gz | psql si1 -U alumnodb
