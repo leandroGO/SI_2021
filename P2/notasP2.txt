@@ -11,46 +11,68 @@ relaciones en general estén mal, o que la propia tabla falte.
 En la tabla Customers puede haber clientes repetidos.
 
 Ideas sueltas:
-* ¿Si la clave primaria de inventory es el product_id (PK de products), se
-  puede añadir a products los atributos de inventory (podrían valer NULL para
-  indicar que esos productos existen pero no están disponibles en la tienda
-  [siquiera están contemplados con stock=0])?
+* DONE: ¿Si la clave primaria de inventory es el product_id (PK de products),
+  se puede añadir a products los atributos de inventory (podrían valer NULL
+  para indicar que esos productos existen pero no están disponibles en la
+  tienda [siquiera están contemplados con stock=0])?
   + No, solo relacionarlas.
+
+* ¿Los campos stock y sales deberían forzosamente ser positivos?
+
 * ¿Llevar registro de número de ventas en inventory o hacer agregaciones de
   orderdetail?
   + Llevarlo en inventory.
+
 * ¿Habría que crear tablas para genres, languages o countries tales que las
   tablas correspondientes moviegenre, ..., sean relaciones muchos a muchos con
   movie?
   + Crear tablas.
+
 * En imdb_movies, el atributo year es de tipo text (debería ser otra cosa).
-* En imdb_actors, el atributo gender debería ser varying(1).
-* En customer, cambiar age por birthdate.
+  - Hay dos películas con 1998-1999 como year. ¿Escoger uno o dejarlo así?
+
+* ¿En imdb_actors, el atributo gender debería ser varying(1)?
+
+* ¿En customer, cambiar age por birthdate?
+
 * ¿Redundancia de country, region, state, city, zipcode en customer?
   + MIRAR LOS DATOS, y si no se usan, eliminarlos.
-* Asociar actors, movieactor y movie igual que directors y eso.
+
+* DONE: Asociar actors, movieactor y movie igual que directors y eso.
+
 * Asociar orderdetail como relación muchos a muchos entre order y product.
   Meter el price solo en product.
-* Asociar customer y orderdetail (customer_id FK en la segunda).
-* Hacer el campo status de orders de un tipo propio según la lista de status
-  posibles del enunciado.
-* ¿El campo numpartitipation de directormovies debería (además de ser
+  - Todo bien salvo que hay filas con (orderid, prod_id) repetidos. ¿Sumar
+    quantity (¿cómo hacerlo?) o escoger uno?
+
+* DONE (asocia orders y customers): Asociar customer y orderdetail (customer_id
+  FK en la segunda).
+
+* DONE: Hacer el campo status de orders de un tipo propio según la lista de
+  status posibles del enunciado.
+
+* DONE: ¿El campo numpartitipation de directormovies debería (además de ser
   numparticipation) ser clave primaria?
   + No debería
+
 * ¿En customer, password debería ser char u otra cosa (guardamos el hash de la
   contraseña)?
   + Se guarda en claro.
+
 * ¿En customer, deberíamos conocer expiration date e income?
   + Meh, no molesta.
+
 * ¿En customer, address1 y address2 o atributo multivaluado?
   + Dejarlo así.
 
 Semana 2 ----------------------------------------------------------------------
+
 * Procedimientos almacenados => Funciones en PostgreSQL
     CREATE OR REPLACE FUNCTION ...
         ...
     END;
     $$ LANGUAGE [SQL/PLPGSQL]
+
 * Triggers
     1. Declarar función
     2. Declarar trigger especificando cuándo se ejecuará la función
@@ -61,5 +83,7 @@ Semana 2 ----------------------------------------------------------------------
             EXECUTE PROCEDURE ...
     3. Trabajar con las tablas NEW y OLD
 
+
 * www.postgresql.org/docs/9.1/plpgsql-function.html
+
 * www.postgresql.org/docs/9.1/plpgsql-trigger.html
