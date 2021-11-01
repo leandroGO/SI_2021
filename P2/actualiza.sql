@@ -15,11 +15,6 @@ ALTER TABLE imdb_directormovies
     DROP CONSTRAINT imdb_directormovies_pkey,
     ADD CONSTRAINT imdb_directormovies_pkey PRIMARY KEY (directorid, movieid);
 
-/*--- imdb_directors ---*/
-SELECT pg_catalog.setval(
-    pg_get_serial_sequence('imdb_directors', 'directorid'), MAX(directorid))
-FROM imdb_directors;
-
 /*--- inventory ---*/
 ALTER TABLE inventory
     ADD CONSTRAINT inventory_prod_id_fkey
@@ -64,3 +59,35 @@ ALTER TABLE orders
 CREATE UNIQUE INDEX i_orders_one_null
     ON orders (customerid, (status IS NULL))
     WHERE status IS NULL;
+
+/*--- Serial sequences ---*/
+/* imdb_actors */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_actors', 'actorid'), MAX(actorid))
+FROM imdb_actors;
+
+/* imdb_directors */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_directors', 'directorid'), MAX(directorid))
+FROM imdb_directors;
+
+/* imdb_movies */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_movies', 'movieid'), MAX(movieid))
+FROM imdb_movies;
+
+/* customers */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('customers', 'customerid'), MAX(customerid))
+FROM customers;
+
+/* orders */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('orders', 'orderid'), MAX(orderid))
+FROM orders;
+
+/* products */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('products', 'prod_id'), MAX(prod_id))
+FROM products;
+
