@@ -15,6 +15,11 @@ ALTER TABLE imdb_directormovies
     DROP CONSTRAINT imdb_directormovies_pkey,
     ADD CONSTRAINT imdb_directormovies_pkey PRIMARY KEY (directorid, movieid);
 
+/*--- imdb_directors ---*/
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_directors', 'directorid'), MAX(directorid))
+FROM imdb_directors;
+
 /*--- inventory ---*/
 ALTER TABLE inventory
     ADD CONSTRAINT inventory_prod_id_fkey
