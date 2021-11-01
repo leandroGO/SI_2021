@@ -25,16 +25,25 @@ ALTER TABLE inventory
     ADD CONSTRAINT inventory_stock_positive CHECK (stock >= 0);
 
 /*--- orderdetail ---*/
+SELECT orderid, prod_id, SUM(quantity) AS quantity INTO new_orderdetail
+FROM orderdetail
+GROUP BY orderid, prod_id;
+
+DROP TABLE orderdetail;
+
+ALTER TABLE new_orderdetail RENAME TO orderdetail;
+
 ALTER TABLE orderdetail
-    DROP COLUMN price,
+    /* DROP COLUMN price,*/
     ADD CONSTRAINT orderdetail_orderid_fkey
             FOREIGN KEY (orderid)
-            REFERENCES orders(orderid);
+            REFERENCES orders(orderid)
             ON DELETE CASCADE,
     ADD CONSTRAINT orderdetail_prod_id_fkey
             FOREIGN KEY (prod_id)
-            REFERENCES products(prod_id);
-            ON DELETE CASCADE;
+            REFERENCES products(prod_id)
+            ON DELETE CASCADE,
+    ADD CONSTRAINT orderdetail_pkey PRIMARY KEY (orderid, prod_id);
 
 /*--- orders ---*/
 CREATE TYPE order_status AS ENUM ('Paid', 'Processed', 'Shipped');

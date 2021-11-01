@@ -5,11 +5,11 @@ create_env:
 	psycopg2 itsdangerous Flask-Session
 
 create_db:
-	@echo drop db
+	@echo drop db...
 	dropdb si1 -U alumnodb
-	@echo create db
+	@echo create db...
 	createdb si1 -U alumnodb
-	@echo load db
+	@echo load db...
 	gunzip -c dump_v1.4.sql.gz | psql si1 -U alumnodb
 
 run_actualiza:
