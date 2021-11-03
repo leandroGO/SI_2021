@@ -120,6 +120,13 @@ ALTER TABLE customers
         DEFAULT (0),
     ADD balance decimal NULL;
 
+/*--- balance initialization ---*/
+CREATE FUNCTION setCustomersBalance(new decimal) RETURNS void AS $$
+    UPDATE customers
+        SET balance = new;
+$$ LANGUAGE SQL;
+
+SELECT setCustomersBalance(100);
 
 /*--- Serial sequences ---*/
 /* imdb_actors */
