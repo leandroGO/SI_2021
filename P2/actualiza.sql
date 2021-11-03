@@ -73,6 +73,19 @@ ALTER TABLE imdb_moviegenres
         REFERENCES imdb_genres(genre)
         ON DELETE CASCADE;
 
+/*--- imdb_laguages ---*/
+SELECT DISTINCT language, extrainformation INTO imdb_laguages
+FROM imdb_movielanguages;
+
+ALTER TABLE imdb_laguages
+    ADD CONSTRAINT languages_pkey PRIMARY KEY (language, extrainformation);
+
+ALTER TABLE imdb_movielanguages
+    ADD CONSTRAINT movielanguages_language_fkey
+        FOREIGN KEY (language, extrainformation)
+        REFERENCES imdb_laguages(language, extrainformation)
+        ON DELETE CASCADE;
+
 /*--- Serial sequences ---*/
 /* imdb_actors */
 SELECT pg_catalog.setval(
