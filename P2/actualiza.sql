@@ -25,8 +25,16 @@ ALTER TABLE inventory
     ADD CONSTRAINT inventory_stock_positive CHECK (stock >= 0);
 
 /*--- orderdetail ---*/
+SELECT orderid, prod_id, SUM(quantity) AS quantity INTO new_orderdetail
+FROM orderdetail
+GROUP BY orderid, prod_id;
+
+DROP TABLE orderdetail;
+
+ALTER TABLE new_orderdetail RENAME TO orderdetail;
+
 ALTER TABLE orderdetail
-    DROP COLUMN price,
+    /* DROP COLUMN price,*/
     ADD CONSTRAINT orderdetail_orderid_fkey
             FOREIGN KEY (orderid)
             REFERENCES orders(orderid)
@@ -34,7 +42,8 @@ ALTER TABLE orderdetail
     ADD CONSTRAINT orderdetail_prod_id_fkey
             FOREIGN KEY (prod_id)
             REFERENCES products(prod_id)
-            ON DELETE CASCADE;
+            ON DELETE CASCADE,
+    ADD CONSTRAINT orderdetail_pkey PRIMARY KEY (orderid, prod_id);
 
 /*--- orders ---*/
 CREATE TYPE order_status AS ENUM ('Paid', 'Processed', 'Shipped');
@@ -50,3 +59,35 @@ ALTER TABLE orders
 CREATE UNIQUE INDEX i_orders_one_null
     ON orders (customerid, (status IS NULL))
     WHERE status IS NULL;
+
+/*--- Serial sequences ---*/
+/* imdb_actors */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_actors', 'actorid'), MAX(actorid))
+FROM imdb_actors;
+
+/* imdb_directors */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_directors', 'directorid'), MAX(directorid))
+FROM imdb_directors;
+
+/* imdb_movies */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('imdb_movies', 'movieid'), MAX(movieid))
+FROM imdb_movies;
+
+/* customers */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('customers', 'customerid'), MAX(customerid))
+FROM customers;
+
+/* orders */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('orders', 'orderid'), MAX(orderid))
+FROM orders;
+
+/* products */
+SELECT pg_catalog.setval(
+    pg_get_serial_sequence('products', 'prod_id'), MAX(prod_id))
+FROM products;
+
