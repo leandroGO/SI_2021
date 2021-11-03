@@ -29,11 +29,11 @@ ALTER TABLE orderdetail
     DROP COLUMN price,
     ADD CONSTRAINT orderdetail_orderid_fkey
             FOREIGN KEY (orderid)
-            REFERENCES orders(orderid);
+            REFERENCES orders(orderid)
             ON DELETE CASCADE,
     ADD CONSTRAINT orderdetail_prod_id_fkey
             FOREIGN KEY (prod_id)
-            REFERENCES products(prod_id);
+            REFERENCES products(prod_id)
             ON DELETE CASCADE;
 
 /*--- orders ---*/
