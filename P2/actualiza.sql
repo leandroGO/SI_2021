@@ -99,6 +99,28 @@ ALTER TABLE imdb_moviecountries
         REFERENCES imdb_countries(country)
         ON DELETE CASCADE;
 
+/*--- alerts ---*/
+CREATE TABLE alerts (
+    prod_id integer,
+    alert_date date,
+    alert_time time
+);
+
+ALTER TABLE alerts
+    ADD CONSTRAINT alerts_product_fkey
+        FOREIGN KEY (prod_id)
+        REFERENCES inventory(prod_id)
+        ON DELETE CASCADE,
+    ADD CONSTRAINT alerts_pkey PRIMARY KEY (prod_id, alert_date, alert_time);
+
+/*--- customer ---*/
+ALTER TABLE customers
+    ADD loyalty integer NOT NULL
+        CONSTRAINT customer_loyalty_default
+        DEFAULT (0),
+    ADD balance decimal NULL;
+
+
 /*--- Serial sequences ---*/
 /* imdb_actors */
 SELECT pg_catalog.setval(
