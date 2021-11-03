@@ -45,15 +45,18 @@ Ideas sueltas:
   orderdetail?
   + Llevarlo en inventory.
 
-* DONE: ¿Habría que crear tablas para genres, languages o countries tales que las
-  tablas correspondientes moviegenre, ..., sean relaciones muchos a muchos con
-  movie?
+* DONE: ¿Habría que crear tablas para genres, languages o countries tales que
+  las tablas correspondientes moviegenre, ..., sean relaciones muchos a muchos
+  con movie?
   + Crear tablas.
 
-* En imdb_movies, el atributo year es de tipo text (debería ser otra cosa).
+* DONE: En imdb_movies, el atributo year es de tipo text (debería ser otra
+  cosa).
   - Hay dos películas con 1998-1999 como year. ¿Escoger uno o dejarlo así?
+    - Tomamos el primero (aparece también en los títulos de dichas películas)
 
 * ¿En imdb_actors, el atributo gender debería ser varying(1)?
+  - Meh
 
 * ¿En customer, cambiar age por birthdate?
 
