@@ -86,6 +86,19 @@ ALTER TABLE imdb_movielanguages
         REFERENCES imdb_laguages(language, extrainformation)
         ON DELETE CASCADE;
 
+/*--- imdb_country ---*/
+SELECT DISTINCT country INTO imdb_countries
+FROM imdb_moviecountries;
+
+ALTER TABLE imdb_countries
+    ADD CONSTRAINT countries_pkey PRIMARY KEY (country);
+
+ALTER TABLE imdb_moviecountries
+    ADD CONSTRAINT moviecoutries_country_fkey
+        FOREIGN KEY (country)
+        REFERENCES imdb_countries(country)
+        ON DELETE CASCADE;
+
 /*--- Serial sequences ---*/
 /* imdb_actors */
 SELECT pg_catalog.setval(

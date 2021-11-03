@@ -45,7 +45,7 @@ Ideas sueltas:
   orderdetail?
   + Llevarlo en inventory.
 
-* ¿Habría que crear tablas para genres, languages o countries tales que las
+* DONE: ¿Habría que crear tablas para genres, languages o countries tales que las
   tablas correspondientes moviegenre, ..., sean relaciones muchos a muchos con
   movie?
   + Crear tablas.
