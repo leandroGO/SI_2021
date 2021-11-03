@@ -60,6 +60,19 @@ CREATE UNIQUE INDEX i_orders_one_null
     ON orders (customerid, (status IS NULL))
     WHERE status IS NULL;
 
+/*--- imdb_genres ---*/
+SELECT DISTINCT genre INTO imdb_genres
+FROM imdb_moviegenres;
+
+ALTER TABLE imdb_genres
+    ADD CONSTRAINT genres_pkey PRIMARY KEY (genre);
+
+ALTER TABLE imdb_moviegenres
+    ADD CONSTRAINT moviegenres_genre_fkey
+        FOREIGN KEY (genre)
+        REFERENCES imdb_genres(genre)
+        ON DELETE CASCADE;
+
 /*--- Serial sequences ---*/
 /* imdb_actors */
 SELECT pg_catalog.setval(
