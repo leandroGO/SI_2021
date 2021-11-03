@@ -15,6 +15,11 @@ ALTER TABLE imdb_directormovies
     DROP CONSTRAINT imdb_directormovies_pkey,
     ADD CONSTRAINT imdb_directormovies_pkey PRIMARY KEY (directorid, movieid);
 
+/*--- imdb_movies ---*/
+ALTER TABLE imdb_movies
+    ALTER COLUMN year TYPE integer
+        USING (LEFT(year, 4)::integer);
+
 /*--- inventory ---*/
 ALTER TABLE inventory
     ADD CONSTRAINT inventory_prod_id_fkey
@@ -34,7 +39,7 @@ DROP TABLE orderdetail;
 ALTER TABLE new_orderdetail RENAME TO orderdetail;
 
 ALTER TABLE orderdetail
-    /* DROP COLUMN price,*/
+    ADD COLUMN price numeric,
     ADD CONSTRAINT orderdetail_orderid_fkey
             FOREIGN KEY (orderid)
             REFERENCES orders(orderid)
@@ -118,12 +123,12 @@ ALTER TABLE customers
     ADD loyalty integer NOT NULL
         CONSTRAINT customer_loyalty_default
         DEFAULT (0),
-    ADD balance decimal NULL;
+    ADD balance numeric NULL;
 
 /*--- balance initialization ---*/
-CREATE FUNCTION setCustomersBalance(new decimal) RETURNS void AS $$
+CREATE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS void AS $$
     UPDATE customers
-        SET balance = new;
+        SET balance = ROUND(CAST(random()*initialBalance AS numeric), 2);
 $$ LANGUAGE SQL;
 
 SELECT setCustomersBalance(100);
