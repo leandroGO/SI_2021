@@ -69,6 +69,10 @@ Ideas sueltas:
     quantity (¿cómo hacerlo?) o escoger uno? ¿Es admisible crear una nueva
     tabla que sea así, eliminar orderdetail y renombrar la nueva orderdetail?
 
+* Para llamar un script dentro de otro script sql:
+  \ir 'script'
+        (^ ruta relativa)
+
 Semana 2 ----------------------------------------------------------------------
 * Procedimientos almacenados => Funciones en PostgreSQL
     CREATE OR REPLACE FUNCTION ...
@@ -90,3 +94,9 @@ Semana 2 ----------------------------------------------------------------------
 * www.postgresql.org/docs/9.1/plpgsql-function.html
 
 * www.postgresql.org/docs/9.1/plpgsql-trigger.html
+
+Semana 3 ----------------------------------------------------------------------
+SQLAlchemy:     (se detallará más en la P3)
+* Más seguro trabajar con los constructores del lenguaje (p. e. evita
+  inyecciones).
+* Crear engine de BD, establecer conexión, hacer cosas, cerrar conexión.
