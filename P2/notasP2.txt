@@ -93,9 +93,9 @@ Semana 2 ----------------------------------------------------------------------
     3. Trabajar con las tablas NEW y OLD
 
 
-* www.postgresql.org/docs/9.1/plpgsql-function.html
+* https://www.postgresql.org/docs/9.1/plpgsql-function.html
 
-* www.postgresql.org/docs/9.1/plpgsql-trigger.html
+* https://www.postgresql.org/docs/9.1/plpgsql-trigger.html
 
 Semana 3 ----------------------------------------------------------------------
 SQLAlchemy:     (se detallará más en la P3)

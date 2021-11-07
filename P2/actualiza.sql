@@ -125,14 +125,6 @@ ALTER TABLE customers
         DEFAULT (0),
     ADD balance numeric NULL;
 
-/*--- balance initialization ---*/
-CREATE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS void AS $$
-    UPDATE customers
-        SET balance = ROUND(CAST(random()*initialBalance AS numeric), 2);
-$$ LANGUAGE SQL;
-
-SELECT setCustomersBalance(100);
-
 /*--- Serial sequences ---*/
 /* imdb_actors */
 SELECT pg_catalog.setval(
@@ -164,3 +156,52 @@ SELECT pg_catalog.setval(
     pg_get_serial_sequence('products', 'prod_id'), MAX(prod_id))
 FROM products;
 
+/*--- setCustomersBalance ---*/
+CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint)
+    RETURNS void AS $$
+    UPDATE customers
+        SET balance = ROUND(CAST(random()*initialBalance AS numeric), 2);
+$$ LANGUAGE SQL;
+
+SELECT setCustomersBalance(100);
+
+/*--- setPrice.sql ---*/
+\ir setPrice.sql
+
+/*--- setOrderAmount ---*/
+CREATE OR REPLACE FUNCTION setOrderAmount() RETURNS void AS $$
+    UPDATE orders
+    SET netamount = subquery.total,
+        totalamount = ROUND(subquery.total * (1 + tax/100), 2)
+    FROM (SELECT orderdetail.orderid, SUM(price) AS total
+        FROM orderdetail
+        GROUP BY orderdetail.orderid) AS subquery
+    WHERE subquery.orderid = orders.orderid
+            AND netamount IS NULL
+            AND totalamount IS NULL;
+$$ LANGUAGE SQL;
+
+SELECT setOrderAmount();
+
+/*--- getTopSales ---*/
+/* Vista auxiliar */
+CREATE OR REPLACE VIEW top_sales_per_year AS
+    SELECT year, MAX(sales) as top_sales
+    FROM imdb_movies
+        NATURAL JOIN products
+        NATURAL JOIN inventory
+    GROUP BY imdb_movies.year;
+
+CREATE OR REPLACE FUNCTION getTopSales(year1 INT, year2 INT, OUT Year INT, OUT
+    Film CHAR, OUT sales bigint) AS $$
+    SELECT DISTINCT ON(year, sales) year, movietitle, sales
+    FROM imdb_movies
+        NATURAL JOIN products
+        NATURAL JOIN inventory
+    WHERE imdb_movies.year >= year1
+            AND imdb_movies.year <= year2
+            AND sales = (SELECT top_sales
+                         FROM top_sales_per_year AS tspy
+                         WHERE tspy.year = imdb_movies.year)
+    ORDER BY sales DESC;
+$$ LANGUAGE SQL;
