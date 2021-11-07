@@ -55,19 +55,21 @@ Ideas sueltas:
   - Hay dos películas con 1998-1999 como year. ¿Escoger uno o dejarlo así?
     - Tomamos el primero (aparece también en los títulos de dichas películas)
 
+* DONE: Asociar orderdetail como relación muchos a muchos entre order y
+  product.
+  - Todo bien salvo que hay filas con (orderid, prod_id) repetidos. ¿Sumar
+    quantity (¿cómo hacerlo?) o escoger uno? ¿Es admisible crear una nueva
+    tabla que sea así, eliminar orderdetail y renombrar la nueva orderdetail?
+    + Sí
+
 * ¿En imdb_actors, el atributo gender debería ser varying(1)?
   - Meh
 
 * ¿En customer, cambiar age por birthdate?
+  - Meh
 
 * ¿Redundancia de country, region, state, city, zipcode en customer?
   + MIRAR LOS DATOS, y si no se usan, eliminarlos.
-
-* Asociar orderdetail como relación muchos a muchos entre order y product.
-  Meter el price solo en product.
-  - Todo bien salvo que hay filas con (orderid, prod_id) repetidos. ¿Sumar
-    quantity (¿cómo hacerlo?) o escoger uno? ¿Es admisible crear una nueva
-    tabla que sea así, eliminar orderdetail y renombrar la nueva orderdetail?
 
 * Para llamar un script dentro de otro script sql:
   \ir 'script'
