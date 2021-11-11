@@ -58,7 +58,8 @@ ALTER TABLE orders
             FOREIGN KEY (customerid)
             REFERENCES customers(customerid)
             ON DELETE CASCADE,
-    ALTER COLUMN status TYPE order_status USING status::order_status;
+    ALTER COLUMN status TYPE order_status USING status::order_status,
+    ADD COLUMN points TYPE BOOLEAN DEFAULT FALSE;
 
 /* Only one order has status NULL per customer */
 CREATE UNIQUE INDEX i_orders_one_null
@@ -160,7 +161,7 @@ FROM products;
 CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint)
     RETURNS void AS $$
     UPDATE customers
-        SET balance = ROUND(CAST(random()*initialBalance AS numeric), 2);
+    SET balance = ROUND(CAST(random()*initialBalance AS numeric), 2);
 $$ LANGUAGE SQL;
 
 SELECT setCustomersBalance(100);
@@ -182,4 +183,4 @@ SELECT setOrderAmount();
 \ir updOrders.sql
 
 /*--- TODO: updInventoryAndCustomer ---*/
-\ir updInventoryAndCustomer.sql
+/*\ir updInventoryAndCustomer.sql*/

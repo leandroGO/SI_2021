@@ -8,7 +8,7 @@ BEGIN
         RETURN NULL;
     END IF;
 
-    DROP IF EXISTS purchased_products;
+    DROP TABLE IF EXISTS purchased_products;
     CREATE TABLE purchased_products AS
     SELECT prod_id,
         quantity,
@@ -40,6 +40,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER new_purchase
+DROP TRIGGER IF EXISTS tr_updInventoryAndCustomer;
+CREATE TRIGGER tr_updInventoryAndCustomer
 BEFORE UPDATE OF status ON orders
     FOR EACH ROW EXECUTE PROCEDURE updInventoryAndCustomer();
