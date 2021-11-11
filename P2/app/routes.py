@@ -1,4 +1,4 @@
-from app import app
+from app import app, database
 from flask import (render_template, request, url_for, redirect, session,
                    make_response)
 import json
@@ -11,12 +11,8 @@ from datetime import datetime
 
 @app.route('/', methods=["GET", "POST"])
 def home():
-    lista = []
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        data = json.load(json_data)
-        peliculas = data["peliculas"]
-        generos = data["generos"]
+    lista = database.db_movieList()
+    generos = database.db_genres()
 
     if request.method == "POST":
         data = request.form
@@ -38,13 +34,6 @@ def home():
                                   peliculas[pelicula]["poster"])
                     link = url_for("pelicula", id=pelicula)
                     lista.append((peliculas[pelicula]["titulo"], link, url))
-
-    else:
-        for pelicula in peliculas.keys():
-            url = url_for("static", filename="images/" +
-                          peliculas[pelicula]["poster"])
-            link = url_for("pelicula", id=pelicula)
-            lista.append((peliculas[pelicula]["titulo"], link, url))
 
     return render_template("lista_peliculas.html", generos=generos,
                            lista=lista)
