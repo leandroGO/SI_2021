@@ -65,6 +65,8 @@ Ideas sueltas:
 * DONE: Insertar en orders una columna points que indique si la compra se hace
   con puntos (o, en cambio, con saldo).
 
+* DONE: Eliminar el campo movierelease de imdb_movies (redundante resp. year).
+
 * ¿En imdb_actors, el atributo gender debería ser varying(1)?
   - Meh
 

@@ -1,69 +1,45 @@
 CREATE OR REPLACE FUNCTION updInventoryAndCustomer() RETURNS TRIGGER
 AS $$
 DECLARE
-    cart_prod RECORD;
-    inventory_prod RECORD;
-    cust RECORD;
     points_per_euro INT;
+    loyalty_percent NUMERIC;
 BEGIN
     points_per_euro = 100;
+    loyalty_percent = 0.05;
 
     IF OLD.status IS NOT NULL THEN    /* Is not a recently purchased cart */
         RETURN NULL;
     END IF;
 
-    /* Check balance or loyalty points are enough */
-    cust = (SElECT *
-                FROM customers
-                WHERE customers.customerid = NEW.customerid);
-    IF NEW.points THEN
-        IF cust.loyalty < NEW.totalamount * points_per_euro THEN
-            RAISE EXCEPTION 'Not enough loyalty points';
-        END IF;
-    ELSE
-        IF cust.balance < NEW.totalamount THEN
-            RAISE EXCEPTION 'Not enough funds in account';
-        END IF;
-    END IF;
-
-    /* Check inventory stock */
-    DROP TABLE IF EXISTS purchased_products;
-    CREATE TABLE purchased_products AS
-    SELECT prod_id,
-        quantity,
-        movietitle || ' ('|| products.description || ')' AS prod_name
-    FROM orderdetail
-        INNER JOIN products ON (orderdetail.prod_id = products.prod_id)
-        INNER JOIN imdb_movies ON (products.movieid = imdb_movies.movieid)
-    WHERE orderdetail.orderid = NEW.orderid;
-
-    FOR cart_prod IN purchased_products LOOP
-        inventory_prod = (SELECT *
-                            FROM inventory
-                            WHERE inventory.prod_id = cart_prod.prod_id);
-        IF inventory_prod.stock < cart_prod.quantity THEN
-            RAISE EXCEPTION 'Not enough stock of %', cart_prod.prod_name;
-        ELSIF inventory_prod.stock = cart_prod.quantity THEN
-            INSERT INTO alerts(prod_id, alert_date, alert_time)
-            VAlUES (cart_prod.prod_id, CURRENT_DATE, LOCALTIME);
-        END_IF;
-    END LOOP;
-
     /* Update tables */
     UPDATE inventory
     SET stock = stock - quantity,
         sales = sales + quantity
-    FROM purchased_products
-    WHERE purchased_products.prod_id = inventory.prod_id;
+    FROM orderdetail
+    WHERE orderdetail.prod_id = inventory.prod_id
+        AND orderdetail.orderid = NEW.orderid;
+
+    INSERT INTO alerts(prod_id, alert_date, alert_time)
+    SELECT prod_id, CURRENT_DATE, LOCALTIME
+    FROM inventory
+        NATURAL JOIN orderdetail
+    WHERE orderdetail.orderid = NEW.orderid
+        AND stock = 0;
 
     IF NEW.points THEN
-        /* Update loyalty */
+        UPDATE customers
+        SET loyalty = loyalty - NEW.totalamount * points_per_euro
+        WHERE NEW.customerid = customerid;
     ELSE
-        /* Update balance */
+        UPDATE customers
+        SET balance = balance - NEW.totalamount
+        WHERE NEW.customerid = customerid;
     END IF;
 
+    UPDATE customers
+    SET loyalty = (loyalty + NEW.totalamount * loyalty_percent * points_per_euro)::INT
+    WHERE NEW.customerid = customerid;
 
-    DROP TABLE purchased_products;
     RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
