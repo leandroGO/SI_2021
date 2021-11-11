@@ -8,7 +8,8 @@ ALTER TABLE imdb_actormovies
             FOREIGN KEY (movieid)
             REFERENCES imdb_movies(movieid)
             ON DELETE CASCADE,
-    ADD CONSTRAINT imdb_actormovies_pkey PRIMARY KEY (actorid, movieid);
+    ADD CONSTRAINT imdb_actormovies_pkey PRIMARY KEY (actorid, movieid),
+    DROP COLUMN movierelease;
 
 /*--- imdb_directormovies ---*/
 ALTER TABLE imdb_directormovies
@@ -59,7 +60,7 @@ ALTER TABLE orders
             REFERENCES customers(customerid)
             ON DELETE CASCADE,
     ALTER COLUMN status TYPE order_status USING status::order_status,
-    ADD COLUMN points TYPE BOOLEAN DEFAULT FALSE;
+    ADD COLUMN points BOOLEAN DEFAULT FALSE;
 
 /* Only one order has status NULL per customer */
 CREATE UNIQUE INDEX i_orders_one_null
@@ -179,8 +180,8 @@ SELECT setOrderAmount();
 /*--- getTopActors ---*/
 \ir getTopActors.sql
 
-/*--- TODO: updOrders ---*/
+/*--- updOrders ---*/
 \ir updOrders.sql
 
-/*--- TODO: updInventoryAndCustomer ---*/
-/*\ir updInventoryAndCustomer.sql*/
+/*--- updInventoryAndCustomer ---*/
+\ir updInventoryAndCustomer.sql
