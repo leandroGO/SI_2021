@@ -175,7 +175,7 @@ SELECT setOrderAmount();
 /*--- getTopSales ---*/
 \ir getTopSales.sql
 
-/*--- TODO: getTopActors ---*/
+/*--- getTopActors ---*/
 \ir getTopActors.sql
 
 /*--- TODO: updOrders ---*/
