@@ -7,10 +7,10 @@
 {% else %}
 {% for elem in lista %}
   <div class='pelicula' title='{{elem[0]}}'>
-    <a href="{{elem[1]}}">
-      <img class='pelicula-img' src="{{elem[2]}}">
+    <a href="{{elem[0]}}">
+      <img class='pelicula-img' src="{{url_for('static', filename='images/caratula.jpg')}}">
       <div class='pelicula-titulo'>
-        <p>{{elem[0]}}</p>
+        <p>{{elem[1]}}</p>
       </div>
     </a>
   </div>

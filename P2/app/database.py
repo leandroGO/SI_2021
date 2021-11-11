@@ -40,12 +40,36 @@ def db_genres():
         db_conn = None
         db_conn = db_engine.connect()
 
-        #Tomaoms 20 peliculas de la BD
         query = "SELECT genre from imdb_genres"
         db_result = db_conn.execute(query)
 
         db_conn.close()
         return [genre[0] for genre in list(db_result)]
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return None
+
+def db_search(keyword, genre):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        print(keyword)
+
+        if genre is None:
+            query = f"SELECT * FROM imdb_movies WHERE movietitle ILIKE '%{keyword}%'"
+        else:
+            query = f"SELECT * FROM imdb_movies NATURAL JOIN imdb_moviegenres WHERE movietitle ILIKE '%{keyword}%' AND genre = '{genre}'"
+        db_result = db_conn.execute(query)
+
+        db_conn.close()
+        return list(db_result)
     except:
         if db_conn is not None:
             db_conn.close()

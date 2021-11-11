@@ -11,30 +11,19 @@ from datetime import datetime
 
 @app.route('/', methods=["GET", "POST"])
 def home():
-    lista = database.db_movieList()
     generos = database.db_genres()
 
     if request.method == "POST":
         data = request.form
 
-        titulo_buscado = data["busqueda"].lower()
+        titulo_buscado = data["busqueda"]
         if data["genero"] == "todas":
-            for pelicula in peliculas:
-                if titulo_buscado in peliculas[pelicula]["titulo"].lower():
-                    url = url_for("static", filename="images/" +
-                                  peliculas[pelicula]["poster"])
-                    link = url_for("pelicula", id=pelicula)
-                    lista.append((peliculas[pelicula]["titulo"], link, url))
+            lista = database.db_search(titulo_buscado, None)
         else:
-            for pelicula in peliculas:
-                categoria_pelicula = peliculas[pelicula]["categoria"]
-                if (titulo_buscado in peliculas[pelicula]["titulo"].lower()
-                        and categoria_pelicula == data["genero"]):
-                    url = url_for("static", filename="images/" +
-                                  peliculas[pelicula]["poster"])
-                    link = url_for("pelicula", id=pelicula)
-                    lista.append((peliculas[pelicula]["titulo"], link, url))
-
+            lista = database.db_search(titulo_buscado, data["genero"])
+    else:
+        lista = database.db_movieList()
+    print(lista)
     return render_template("lista_peliculas.html", generos=generos,
                            lista=lista)
 
