@@ -195,25 +195,32 @@ def add():
     #Uso de la base de datos para el carrito de cada usuario    
     else:
         database.db_add(session["usuario"], id)
+
     return redirect(url_for('carrito'))
 
 
 @app.route('/sub/<string:id>')
 def sub(id):
-    if ("carrito" in session
-            and id in session["carrito"]
-            and session["carrito"][id] > 1):
-        session["carrito"][id] -= 1
-        session.modified = True
+    if "usuario" not in session:
+        if ("carrito" in session
+                and id in session["carrito"]
+                and session["carrito"][id] > 1):
+            session["carrito"][id] -= 1
+            session.modified = True
+    else:
+        database.db_sub(session["usuario"], id)
 
     return redirect(url_for('carrito'))
 
 
 @app.route('/delete/<string:id>')
 def delete(id):
-    if "carrito" in session and id in session["carrito"]:
-        session["carrito"].pop(id)
-        session.modified = True
+    if "usuario" not in session:
+        if "carrito" in session and id in session["carrito"]:
+            session["carrito"].pop(id)
+            session.modified = True
+    else:
+        database.db_delete(user, id)
 
     return redirect(url_for('carrito'))
 

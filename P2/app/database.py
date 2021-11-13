@@ -168,6 +168,12 @@ def db_add(user, id):
 
         return None
 
+def db_sub(user, id):
+    pass
+
+def db_delete(user, id):
+    pass
+
 
 def db_getTitle(id):
     try:
