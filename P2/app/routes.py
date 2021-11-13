@@ -141,7 +141,7 @@ def logout():
 @app.route('/pelicula/<string:id>')
 def pelicula(id):
     generos = database.db_genres()
-    pelicula, reparto, categorias, directores, precios = database.movieInfo(id)
+    pelicula, reparto, categorias, directores, precios = database.db_movieInfo(id)
 
     return render_template("detalle.html", pelicula=pelicula[0],
                             reparto=reparto,
@@ -153,49 +153,48 @@ def pelicula(id):
 
 @app.route('/carrito')
 def carrito():
+    generos = database.db_genres()
     context = []
-    if "carrito" in session:
-        lista = session["carrito"]
+
+    if "usuario" not in session:
+        if "carrito" in session:
+            lista = session["carrito"]
+            for item in lista.keys():
+                context.append((item, lista[item], database.db_getTitle(item)))
     else:
-        lista = dict()
+        context = database.db_getCart(session["usuario"])
 
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        data = json.load(json_data)
-        peliculas = data["peliculas"]
-        generos = data["generos"]
-
-    for item in lista.keys():
-        context.append((item, lista[item], peliculas[item]["titulo"]))
-    print(context)
     return render_template("carrito.html", generos=generos, lista=context)
 
 
 @app.route('/add')
 def add():
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        data = json.load(json_data)
-        peliculas = data["peliculas"]
-        generos = data["generos"]
+    generos = database.db_genres()
+    id = request.args.get("product")
 
-    if id not in peliculas:
+    if id is None or not database.db_productCheck(id):
         return render_template("error.html", generos=generos)
 
-    # No hay carrito
-    if "carrito" not in session:
-        carrito = {id: 1}
-        session["carrito"] = carrito
+    # Uso de sessions en caso de que el usuario no haya iniciado sesion    
+    if "usuario" not in session:
+        # No hay carrito
+        if "carrito" not in session:
+            carrito = {id: 1}
+            session["carrito"] = carrito
 
-    # Carrito ya creado sin la pelicula
-    elif id not in session["carrito"]:
-        session["carrito"][id] = 1
+        # Carrito ya creado sin la pelicula
+        elif id not in session["carrito"]:
+            session["carrito"][id] = 1
 
-    # Carrito contiene pelicula, se incrementa cantidad
+        # Carrito contiene pelicula, se incrementa cantidad
+        else:
+            session["carrito"][id] += 1
+
+        session.modified = True
+
+    #Uso de la base de datos para el carrito de cada usuario    
     else:
-        session["carrito"][id] += 1
-
-    session.modified = True
+        database.db_add(session["usuario"], id)
     return redirect(url_for('carrito'))
 
 

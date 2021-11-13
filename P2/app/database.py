@@ -77,7 +77,7 @@ def db_search(keyword, genre):
 
         return None
 
-def movieInfo(id):
+def db_movieInfo(id):
     try:
         # conexion a la base de datos
         db_conn = None
@@ -115,6 +115,71 @@ def movieInfo(id):
 
         db_conn.close()
         return (info, reparto, generos, directores, precios)
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return None
+
+
+def db_productCheck(id):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT DISTINCT prod_id FROM inventory WHERE prod_id = {id} AND stock > 0"
+        ret = len(list(db_conn.execute(query))) > 0
+
+        db_conn.close()
+        return ret
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return False
+
+def db_add(user, id):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f""
+        db_conn.execute(query)
+
+        db_conn.close()
+        return
+    except:
+        if db_conn is not None:
+            db_conn.close()
+        print("Exception in DB access:")
+        print("-"*60)
+        traceback.print_exc(file=sys.stderr)
+        print("-"*60)
+
+        return None
+
+
+def db_getTitle(id):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT DISTINCT movietitle FROM imdb_movies NATURAL JOIN products WHERE prod_id = {id}"
+        title = list(db_conn.execute(query))[0][0]
+
+        db_conn.close()
+        return title
     except:
         if db_conn is not None:
             db_conn.close()
