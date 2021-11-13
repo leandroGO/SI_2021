@@ -86,7 +86,7 @@ def movieInfo(id):
         query = f"SELECT movieid, movietitle, year FROM imdb_movies WHERE movieid = {id}"
         info = list(db_conn.execute(query))
 
-        query = f"SELECT actorname FROM imdb_movies NATURAL JOIN imdb_actormovies NATURAL JOIN imdb_actors WHERE movieid = {id}"
+        query = f"SELECT actorname FROM imdb_movies NATURAL JOIN imdb_actormovies NATURAL JOIN imdb_actors WHERE movieid = {id} ORDER BY creditsposition"
         db_result = list(db_conn.execute(query))
         reparto = [actor[0] for actor in db_result]
         if len(reparto) >= 1:
