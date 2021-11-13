@@ -19,8 +19,8 @@ BEGIN
     WHERE orderdetail.prod_id = inventory.prod_id
         AND orderdetail.orderid = NEW.orderid;
 
-    INSERT INTO alerts(prod_id, alert_date, alert_time)
-    SELECT prod_id, CURRENT_DATE, LOCALTIME
+    INSERT INTO alerts(prod_id, alert_timestamp)
+    SELECT prod_id, CURRENT_TIMESTAMP
     FROM inventory
         NATURAL JOIN orderdetail
     WHERE orderdetail.orderid = NEW.orderid

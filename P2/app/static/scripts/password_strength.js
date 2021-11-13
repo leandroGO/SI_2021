@@ -11,19 +11,19 @@ let strongPassword = new RegExp("(?=.*[a-z])"
                                 + "(?=.*[^A-Za-z0-9])"
                                 + "(?=.{8,})");
 
-// Una contraseña moderadamente fuerte o bien consta de al menos 6 caracteres y
-// cumple las demás condiciones, o bien no consta de un dígito pero sí cumple
+// Una contraseña moderadamente fuerte consta de al menos 6 caracteres y cumple
 // las demás condiciones
 let mediumReq1 = "((?=.*[a-z])"
                  + "(?=.*[A-Z])"
                  + "(?=.*[0-9])"
                  + "(?=.*[^A-Za-z0-9])"
                  + "(?=.{6,}))";
-let mediumReq2 = "((?=.*[a-z])"
-                 + "(?=.*[A-Z])"
-                 + "(?=.*[^A-Za-z0-9])"
-                 + "(?=.{8,}))";
-let mediumPassword = new RegExp(mediumReq1 + "|" + mediumReq2);
+//let mediumReq2 = "((?=.*[a-z])"
+//                 + "(?=.*[A-Z])"
+//                 + "(?=.*[^A-Za-z0-9])"
+//                 + "(?=.{8,}))";
+//let mediumPassword = new RegExp(mediumReq1 + "|" + mediumReq2);
+let mediumPassword = new RegExp(mediumReq1);
 
 //  StrengthChecker()
 // Comprueba la fuerza de la contraseña introducida

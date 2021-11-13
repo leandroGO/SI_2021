@@ -8,8 +8,7 @@ ALTER TABLE imdb_actormovies
             FOREIGN KEY (movieid)
             REFERENCES imdb_movies(movieid)
             ON DELETE CASCADE,
-    ADD CONSTRAINT imdb_actormovies_pkey PRIMARY KEY (actorid, movieid),
-    DROP COLUMN movierelease;
+    ADD CONSTRAINT imdb_actormovies_pkey PRIMARY KEY (actorid, movieid);
 
 /*--- imdb_directormovies ---*/
 ALTER TABLE imdb_directormovies
@@ -19,7 +18,8 @@ ALTER TABLE imdb_directormovies
 /*--- imdb_movies ---*/
 ALTER TABLE imdb_movies
     ALTER COLUMN year TYPE integer
-        USING (LEFT(year, 4)::integer);
+        USING (LEFT(year, 4)::integer),
+    DROP COLUMN movierelease;
 
 /*--- inventory ---*/
 ALTER TABLE inventory
@@ -109,8 +109,7 @@ ALTER TABLE imdb_moviecountries
 /*--- alerts ---*/
 CREATE TABLE alerts (
     prod_id integer,
-    alert_date date,
-    alert_time time
+    alert_timestamp TIMESTAMP WITH TIME ZONE
 );
 
 ALTER TABLE alerts
@@ -118,7 +117,7 @@ ALTER TABLE alerts
         FOREIGN KEY (prod_id)
         REFERENCES inventory(prod_id)
         ON DELETE CASCADE,
-    ADD CONSTRAINT alerts_pkey PRIMARY KEY (prod_id, alert_date, alert_time);
+    ADD CONSTRAINT alerts_pkey PRIMARY KEY (prod_id, alert_timestamp);
 
 /*--- customer ---*/
 ALTER TABLE customers

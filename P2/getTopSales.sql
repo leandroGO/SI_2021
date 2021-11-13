@@ -18,8 +18,8 @@ BEGIN
         CREATE TABLE getTopSalesAux AS
         SELECT movieid, SUM(quantity) as total_sales
         FROM orders
-        INNER JOIN orderdetail ON (orders.orderid = orderdetail.orderid)
-        INNER JOIN products ON (orderdetail.prod_id = products.prod_id)
+            INNER JOIN orderdetail ON (orders.orderid = orderdetail.orderid)
+            INNER JOIN products ON (orderdetail.prod_id = products.prod_id)
         WHERE EXTRACT(year FROM orderdate) = min_year
         GROUP BY movieid;
 
@@ -32,11 +32,11 @@ BEGIN
     END LOOP;
 
     RETURN QUERY SELECT DISTINCT ON(getTopSalesResults.Year, getTopSalesResults.sales)
-    getTopSalesResults.Year,
-    movietitle::CHAR(255),
-    getTopSalesResults.sales
+        getTopSalesResults.Year,
+        movietitle::CHAR(255),
+        getTopSalesResults.sales
     FROM getTopSalesResults
-    INNER JOIN imdb_movies ON (getTopSalesResults.movieid = imdb_movies.movieid)
+        INNER JOIN imdb_movies ON (getTopSalesResults.movieid = imdb_movies.movieid)
     ORDER BY getTopSalesResults.sales DESC;
 
     DROP TABLE getTopSalesAux;
