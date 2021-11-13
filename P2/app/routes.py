@@ -23,7 +23,7 @@ def home():
             lista = database.db_search(titulo_buscado, data["genero"])
     else:
         lista = database.db_movieList()
-    print(lista)
+
     return render_template("lista_peliculas.html", generos=generos,
                            lista=lista)
 
@@ -140,27 +140,15 @@ def logout():
 
 @app.route('/pelicula/<string:id>')
 def pelicula(id):
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        data = json.load(json_data)
-        peliculas = data["peliculas"]
-        generos = data["generos"]
+    generos = database.db_genres()
+    pelicula, reparto, categorias, directores, precios = database.movieInfo(id)
 
-    pelicula = peliculas[id]
-
-    reparto = ""
-    for actor in pelicula["actores"]:
-        reparto += ", {}".format(actor)
-
-    return render_template("detalle.html", titulo=pelicula["titulo"],
-                           anno=pelicula["anno"],
-                           director=pelicula["director"],
-                           reparto=reparto[2:],
-                           categoria=pelicula["categoria"],
-                           precio=pelicula["precio"],
-                           img=url_for('static', filename="images/" +
-                                       pelicula["poster"]),
-                           id=id, generos=generos)
+    return render_template("detalle.html", pelicula=pelicula[0],
+                            reparto=reparto,
+                            categorias=categorias,
+                            directores=directores,
+                            precios=precios,
+                            generos=generos)
 
 
 @app.route('/carrito')
@@ -183,8 +171,8 @@ def carrito():
     return render_template("carrito.html", generos=generos, lista=context)
 
 
-@app.route('/add/<string:id>')
-def add(id):
+@app.route('/add')
+def add():
     path = os.path.join(app.root_path, "static/peliculas.json")
     with open(path) as json_data:
         data = json.load(json_data)

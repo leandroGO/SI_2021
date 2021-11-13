@@ -6,8 +6,8 @@
 <p> No se han encontrado resultados </p>
 {% else %}
 {% for elem in lista %}
-  <div class='pelicula' title='{{elem[0]}}'>
-    <a href="{{elem[0]}}">
+  <div class='pelicula' title='{{elem[1]}}'>
+    <a href="{{url_for('pelicula', id=elem[0])}}">
       <img class='pelicula-img' src="{{url_for('static', filename='images/caratula.jpg')}}">
       <div class='pelicula-titulo'>
         <p>{{elem[1]}}</p>

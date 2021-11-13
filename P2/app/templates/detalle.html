@@ -1,17 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<img id="detail_img" src="{{img}}">
+<img id="detail_img" src="{{url_for('static', filename='images/caratula.jpg')}}">
 <div id="detail_text">
-  <h2>{{titulo}}</h2>
+  <h2>{{pelicula[1]}}</h2>
   <ul>
-    <li>Año: {{anno}}</li>
-    <li>Director: {{director}}</li>
-    <li>Categoría: {{categoria}}</li>
+    <li>Año: {{pelicula[2]}}</li>
+    {% if directores %}
+    <li>Director/es: {{directores}}</li>
+    {% endif %}
+    {% if categorias %}
+    <li>Categoría/s: {{categorias}}</li>
+    {% endif %}
+    {% if reparto %}
     <li>Reparto: {{reparto}}</li>
+    {% endif %}
   </ul>
-  <h3>Precio: {{precio}}€</h3>
   <br>
-  <a id="anadir_carro" href="{{url_for('add', id=id)}}">Añadir al carrito</a>
+  <form id="product_selector" method="GET" action="{{url_for('add')}}">
+    {% if precios %}
+      Productos disponibles: 
+      <select name="product" id="product">
+        {% for precio in precios %}
+        <option value="{{precio[0]}}">{{precio[1]}} - {{precio[2]}}</option>
+        {% endfor %}
+      </select>
+    {% else %}
+      No hay stock disponible
+    {% endif %}
+    <br>
+    <input type="submit" id="anadir_carro" value="Añadir al carrito">
+  </form>
 </div>
 {% endblock %}

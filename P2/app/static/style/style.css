@@ -213,6 +213,7 @@ body {
     background-color:rgb(14,82,10); 
     padding:5px;
     transition: 0.3s;
+    border:none;
 }
 
 #anadir_carro:hover {
