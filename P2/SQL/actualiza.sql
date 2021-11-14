@@ -119,14 +119,13 @@ ALTER TABLE alerts
         ON DELETE CASCADE,
     ADD CONSTRAINT alerts_pkey PRIMARY KEY (prod_id, alert_timestamp);
 
-/*--- customer ---*/
+/*--- customers ---*/
 ALTER TABLE customers
     ADD loyalty integer NOT NULL
         CONSTRAINT customer_loyalty_default
         DEFAULT (0),
     ADD balance numeric NULL,
-    ADD CONSTRAINT customer_unique_email
-        UNIQUE (email),
+    ADD CONSTRAINT customer_unique_email UNIQUE (email),
     ALTER COLUMN firstname DROP NOT NULL,
     ALTER COLUMN lastname DROP NOT NULL,
     ALTER COLUMN city DROP NOT NULL,
