@@ -37,7 +37,7 @@ def login():
 
     if request.method == 'GET':  # El cliente solicita el formulario
         session["url_previo"] = request.referrer
-        last_user_email = request.cookies.get("user_email")
+        last_user_email = request.cookies.get("last_user_email")
         if last_user_email:
             user_email = last_user_email
         else:
@@ -122,7 +122,6 @@ def register():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop("usuario", None)
-    session.pop("carrito", None)
     return redirect(url_for('home'))
 
 
