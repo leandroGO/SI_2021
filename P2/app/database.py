@@ -155,15 +155,27 @@ def db_add(email, id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id}"
+        query = ("SELECT orders.orderid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 f"WHERE email = '{email}' "
+                 "AND status IS NULL "
+                 f"AND prod_id = {id}")
         db_result = list(db_conn.execute(query))
 
         if len(db_result) > 0:
-            query = f"UPDATE orderdetail SET quantity = quantity + 1 WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+            query = ("UPDATE orderdetail "
+                     "SET quantity = quantity + 1 "
+                     f"WHERE orderid = {db_result[0][0]} AND prod_id = {id}")
         else:
-            query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+            query = ("SELECT orders.orderid "
+                     "FROM customers "
+                     "NATURAL JOIN orders "
+                     f"WHERE email = '{email}' AND status IS NULL")
             orderid = list(db_conn.execute(query))[0][0]
-            query = f"INSERT INTO orderdetail(orderid, prod_id, quantity) VALUES ({orderid}, {id}, 1)"
+            query = ("INSERT INTO orderdetail(orderid, prod_id, quantity) "
+                     f"VALUES ({orderid}, {id}, 1)")
 
         db_conn.execute(query)
 
@@ -180,11 +192,18 @@ def db_sub(email, id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id} AND quantity > 1"
+        query = ("SELECT orders.orderid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 f"WHERE email = '{email}' AND status IS NULL "
+                 f"AND prod_id = {id} AND quantity > 1")
         db_result = list(db_conn.execute(query))
 
         if len(db_result) > 0:
-            query = f"UPDATE orderdetail SET quantity = quantity - 1 WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+            query = ("UPDATE orderdetail "
+                     "SET quantity = quantity - 1 "
+                     f"WHERE orderid = {db_result[0][0]} AND prod_id = {id}")
             db_conn.execute(query)
 
         db_conn.close()
@@ -200,11 +219,17 @@ def db_delete(email, id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id}"
+        query = ("SELECT orders.orderid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 f"WHERE email = '{email}' AND status IS NULL "
+                 f"AND prod_id = {id}")
         db_result = list(db_conn.execute(query))
 
         if len(db_result) > 0:
-            query = f"DELETE FROM orderdetail WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+            query = ("DELETE FROM orderdetail "
+                     f"WHERE orderid = {db_result[0][0]} AND prod_id = {id}")
             db_conn.execute(query)
 
         db_conn.close()
@@ -221,11 +246,11 @@ def db_getTitle(id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = ("SELECT movietitle || ' (' || description || ')'"
+        query = ("SELECT movietitle || ' (' || description || ')', movieid "
                  "FROM imdb_movies "
                  "NATURAL JOIN products "
                  f"WHERE prod_id = {id}")
-        title = list(db_conn.execute(query))[0][0]
+        title = list(db_conn.execute(query))[0]
 
         db_conn.close()
         return title
@@ -303,7 +328,10 @@ def db_createCart(email):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+        query = ("SELECT orderid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 f"WHERE email = '{email}' AND status IS NULL")
         db_result = list(db_conn.execute(query))
 
         if len(db_result) > 0:
@@ -314,7 +342,8 @@ def db_createCart(email):
         db_result = list(db_conn.execute(query))
         id = db_result[0][0]
 
-        command = f"INSERT INTO orders(customerid, status, orderdate, tax) VALUES ({id}, NULL, CURRENT_DATE, 10)"
+        command = ("INSERT INTO orders(customerid, status, orderdate, tax) "
+                   f"VALUES ({id}, NULL, CURRENT_DATE, 10)")
         db_conn.execute(command)
 
         db_conn.close()
@@ -330,7 +359,10 @@ def db_loadCart(email, cart):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+        query = ("SELECT orderid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 f"WHERE email = '{email}' AND status IS NULL")
         db_result = list(db_conn.execute(query))
 
         if len(db_result) > 0:
@@ -341,16 +373,20 @@ def db_loadCart(email, cart):
         db_result = list(db_conn.execute(query))
         customerid = db_result[0][0]
 
-        command = f"INSERT INTO orders(customerid, status, orderdate, tax) VALUES ({customerid}, NULL, CURRENT_DATE, 10)"
+        command = ("INSERT INTO orders(customerid, status, orderdate, tax) "
+                   f"VALUES ({customerid}, NULL, CURRENT_DATE, 10)")
         db_conn.execute(command)
 
         # Creacion de los orderdetails
-        query = f"SELECT orderid FROM orders WHERE customerid = {customerid} AND status is NULL"
+        query = ("SELECT orderid "
+                 "FROM orders "
+                 f"WHERE customerid = {customerid} AND status is NULL")
         db_result = list(db_conn.execute(query))
         orderid = db_result[0][0]
 
         for item in cart:
-            query = f"INSERT INTO orderdetail(orderid, prod_id, quantity) VALUES ({orderid}, {item}, {cart[item]})"
+            query = ("INSERT INTO orderdetail(orderid, prod_id, quantity) "
+                     f"VALUES ({orderid}, {item}, {cart[item]})")
             db_conn.execute(query)
 
         db_conn.close()
@@ -366,7 +402,15 @@ def db_getCart(email):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT orderdetail.prod_id, quantity, movietitle || ' (' || description || ')' FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail INNER JOIN products ON(orderdetail.prod_id = products.prod_id) NATURAL JOIN imdb_movies WHERE email = '{email}' AND status is NULL"
+        query = ("SELECT orderdetail.prod_id, quantity, "
+                 "movietitle || ' (' || description || ')', movieid "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 "INNER JOIN products "
+                 "ON(orderdetail.prod_id = products.prod_id) "
+                 "NATURAL JOIN imdb_movies "
+                 f"WHERE email = '{email}' AND status is NULL")
         db_result = list(db_conn.execute(query))
 
         db_conn.close()
@@ -376,6 +420,30 @@ def db_getCart(email):
 
         return []
 
+def db_getHistory(email):
+    # TODO
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("SELECT orderdetail.prod_id, quantity, "
+                 "movietitle || ' (' || description || ')' "
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 "INNER JOIN products "
+                 "ON(orderdetail.prod_id = products.prod_id) "
+                 "NATURAL JOIN imdb_movies "
+                 f"WHERE email = '{email}' AND status is NULL")
+        db_result = list(db_conn.execute(query))
+
+        db_conn.close()
+        return db_result
+    except:
+        _exceptionHandler(db_conn)
+
+        return []
 
 def db_getTopActors(genre='Action', n_top=10):
     try:

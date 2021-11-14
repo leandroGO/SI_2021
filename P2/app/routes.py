@@ -165,7 +165,8 @@ def carrito():
         if "carrito" in session:
             lista = session["carrito"]
             for item in lista.keys():
-                context.append((item, lista[item], database.db_getTitle(item)))
+                title, movieid = database.db_getTitle(item)
+                context.append((item, lista[item], title, movieid))
     else:
         context = database.db_getCart(session["email"])
 
