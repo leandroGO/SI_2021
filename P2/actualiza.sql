@@ -124,7 +124,17 @@ ALTER TABLE customers
     ADD loyalty integer NOT NULL
         CONSTRAINT customer_loyalty_default
         DEFAULT (0),
-    ADD balance numeric NULL;
+    ADD balance numeric NULL,
+    ADD CONSTRAINT customer_unique_email
+        UNIQUE (email),
+    ALTER COLUMN firstname DROP NOT NULL,
+    ALTER COLUMN lastname DROP NOT NULL,
+    ALTER COLUMN city DROP NOT NULL,
+    ALTER COLUMN country DROP NOT NULL,
+    ALTER COLUMN region DROP NOT NULL,
+    ALTER COLUMN creditcardtype DROP NOT NULL,
+    ALTER COLUMN creditcardexpiration DROP NOT NULL;
+
 
 /*--- Serial sequences ---*/
 /* imdb_actors */

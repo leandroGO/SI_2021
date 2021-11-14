@@ -7,8 +7,8 @@
   {% if error %}
   <p class="error_msg">{{error}}</p><br>
   {% endif %}
-  <label> Usuario: </label>
-  <input type="text" name="user" {% if username %} value="{{username}}" {% endif %}required><br>
+  <label> Email: </label>
+  <input type="text" name="email" {% if user_email %} value="{{user_email}}" {% endif %}required><br>
   <label> Contraseña: </label>
   <input type="password" name="password" required><br>
   <label><a href="{{url_for('register')}}">Registrarse</a></label>
