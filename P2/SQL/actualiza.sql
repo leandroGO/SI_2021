@@ -177,20 +177,20 @@ $$ LANGUAGE SQL;
 SELECT setCustomersBalance(100);
 
 /*--- setPrice.sql ---*/
-\ir setPrice.sql
+\ir SQL/setPrice.sql
 
 /*--- setOrderAmount ---*/
-\ir setOrderAmount.sql
+\ir SQL/setOrderAmount.sql
 SELECT setOrderAmount();
 
 /*--- getTopSales ---*/
-\ir getTopSales.sql
+\ir SQL/getTopSales.sql
 
 /*--- getTopActors ---*/
-\ir getTopActors.sql
+\ir SQL/getTopActors.sql
 
 /*--- updOrders ---*/
-\ir updOrders.sql
+\ir SQL/updOrders.sql
 
 /*--- updInventoryAndCustomer ---*/
-\ir updInventoryAndCustomer.sql
+\ir SQL/updInventoryAndCustomer.sql
