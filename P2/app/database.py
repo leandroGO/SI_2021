@@ -122,27 +122,70 @@ def db_productCheck(id):
 
         return False
 
-def db_add(user, id):
+def db_add(email, id):
     try:
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f""
+        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id}"
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) > 0:
+            query = f"UPDATE orderdetail SET quantity = quantity + 1 WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+        else:
+            query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+            orderid = list(db_conn.execute(query))[0][0]
+            query = f"INSERT INTO orderdetail(orderid, prod_id, quantity) VALUES ({orderid}, {id}, 1)"
+
         db_conn.execute(query)
 
         db_conn.close()
-        return
+        return None
     except:
         _exceptionHandler(db_conn)
 
         return None
 
-def db_sub(user, id):
-    pass
+def db_sub(email, id):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
 
-def db_delete(user, id):
-    pass
+        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id} AND quantity > 1"
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) > 0:
+            query = f"UPDATE orderdetail SET quantity = quantity - 1 WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+            db_conn.execute(query)
+
+        db_conn.close()
+        return None
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
+def db_delete(email, id):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT orders.orderid FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail WHERE email = '{email}' AND status IS NULL AND prod_id = {id}"
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) > 0:
+            query = f"DELETE FROM orderdetail WHERE orderid = {db_result[0][0]} AND prod_id = {id}"
+            db_conn.execute(query)
+
+        db_conn.close()
+        return None
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
 
 
 def db_getTitle(id):
@@ -213,6 +256,87 @@ def db_loadUserData(email):
         _exceptionHandler(db_conn)
 
         return None
+
+
+def db_createCart(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) > 0:
+            db_conn.close()
+            return True
+
+        query = f"SELECT customerid FROM customers WHERE email = '{email}'"
+        db_result = list(db_conn.execute(query))
+        id = db_result[0][0]
+
+        command = f"INSERT INTO orders(customerid, status, orderdate, tax) VALUES ({id}, NULL, CURRENT_DATE, 10)"
+        db_conn.execute(command)
+
+        db_conn.close()
+        return True
+    except:
+        _exceptionHandler(db_conn)
+
+        return False
+
+def db_loadCart(email, cart):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT orderid FROM customers NATURAL JOIN orders WHERE email = '{email}' AND status IS NULL"
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) > 0:
+            query = f"DELETE FROM orders WHERE orderid = {db_result[0][0]}"
+            db_conn.execute(query)
+
+        query = f"SELECT customerid FROM customers WHERE email = '{email}'"
+        db_result = list(db_conn.execute(query))
+        customerid = db_result[0][0]
+
+        command = f"INSERT INTO orders(customerid, status, orderdate, tax) VALUES ({customerid}, NULL, CURRENT_DATE, 10)"
+        db_conn.execute(command)
+
+        # Creacion de los orderdetails
+        query = f"SELECT orderid FROM orders WHERE customerid = {customerid} AND status is NULL"
+        db_result = list(db_conn.execute(query))
+        orderid = db_result[0][0]
+
+        for item in cart:
+            query = f"INSERT INTO orderdetail(orderid, prod_id, quantity) VALUES ({orderid}, {item}, {cart[item]})"
+            db_conn.execute(query)
+
+        db_conn.close()
+        return True
+    except:
+        _exceptionHandler(db_conn)
+
+        return False
+
+def db_getCart(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT orderdetail.prod_id, quantity, movietitle FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail INNER JOIN products ON(orderdetail.prod_id = products.prod_id) NATURAL JOIN imdb_movies WHERE email = '{email}' AND status is NULL"
+        db_result = list(db_conn.execute(query))
+
+        db_conn.close()
+        return db_result
+    except:
+        _exceptionHandler(db_conn)
+
+        return []
+
 
 # Funciones auxiliares
 def _exceptionHandler(db_conn):

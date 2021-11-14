@@ -67,7 +67,18 @@ def login():
                                        error="Contraseña incorrecta")
 
             session["usuario"] = user_data["name"]
+            session["email"] = email
             update_cookie = True
+
+    # Vinculacion de carrito a la base de datos
+    if "carrito" in session:
+        ret = database.db_loadCart(email, session["carrito"])
+        session.pop("carrito")
+    else:
+        ret = database.db_createCart(email)
+    if ret is False:
+        return render_template("error.html", generos=generos)
+
 
     if "url_previo" in session and session["url_previo"] is not None:
         url_destino = session["url_previo"]
@@ -110,7 +121,6 @@ def register():
         user_data["direccion"] = request.form["reg_direccion"]
         user_data["saldo"] = randrange(101)
         user_data["puntos"] = 0
-        print("No va mal")
         ret = database.db_regUser(user_data)
         if not ret:
             return render_template("registro.html", form=request.form,
@@ -122,6 +132,7 @@ def register():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop("usuario", None)
+    session.pop("email", None)
     return redirect(url_for('home'))
 
 
@@ -149,7 +160,7 @@ def carrito():
             for item in lista.keys():
                 context.append((item, lista[item], database.db_getTitle(item)))
     else:
-        context = database.db_getCart(session["usuario"])
+        context = database.db_getCart(session["email"])
 
     return render_template("carrito.html", generos=generos, lista=context)
 
@@ -163,7 +174,7 @@ def add():
         return render_template("error.html", generos=generos)
 
     # Uso de sessions en caso de que el usuario no haya iniciado sesion    
-    if "usuario" not in session:
+    if "email" not in session:
         # No hay carrito
         if "carrito" not in session:
             carrito = {id: 1}
@@ -181,33 +192,33 @@ def add():
 
     #Uso de la base de datos para el carrito de cada usuario    
     else:
-        database.db_add(session["usuario"], id)
+        database.db_add(session["email"], id)
 
     return redirect(url_for('carrito'))
 
 
 @app.route('/sub/<string:id>')
 def sub(id):
-    if "usuario" not in session:
+    if "email" not in session:
         if ("carrito" in session
                 and id in session["carrito"]
                 and session["carrito"][id] > 1):
             session["carrito"][id] -= 1
             session.modified = True
     else:
-        database.db_sub(session["usuario"], id)
+        database.db_sub(session["email"], id)
 
     return redirect(url_for('carrito'))
 
 
 @app.route('/delete/<string:id>')
 def delete(id):
-    if "usuario" not in session:
+    if "email" not in session:
         if "carrito" in session and id in session["carrito"]:
             session["carrito"].pop(id)
             session.modified = True
     else:
-        database.db_delete(user, id)
+        database.db_delete(session["email"], id)
 
     return redirect(url_for('carrito'))
 
