@@ -3,6 +3,16 @@
 {% block content %}
 
 {% if top_actors %}
+  <form id="top_actors_params" action="{{url_for('home')}}" method="GET">
+    <input type="number" name="n_top" value=10>
+    <select name="genero">
+      <option value="Action">Action</option>
+      {% for genero in generos %}
+        <option value="{{genero}}">{{genero}}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Buscar">
+  </form>
   <table class="historial top_actors">
     <tr>
       <th><h2>Actor</h2></th>

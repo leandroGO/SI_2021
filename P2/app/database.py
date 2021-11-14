@@ -253,7 +253,7 @@ def db_loadUserData(email):
 
         return None
 
-def db_getTopActors(genre, n_top):
+def db_getTopActors(genre='Action', n_top=10):
     try:
         # conexion a la base de datos
         db_conn = None

@@ -24,7 +24,12 @@ def home():
             lista = database.db_search(titulo_buscado, data["genero"])
     else:
         lista = database.db_movieList()
-        top_actors = database.db_getTopActors('Action', 10)
+        data = request.args
+        if data:
+            top_actors = database.db_getTopActors(genre=data["genero"],
+                                                  n_top=data["n_top"])
+        else:
+            top_actors = database.db_getTopActors()
 
     return render_template("lista_peliculas.html", generos=generos,
                            lista=lista, top_actors=top_actors)
