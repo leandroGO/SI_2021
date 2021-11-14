@@ -16,22 +16,22 @@
     <th><h2>Fecha</h2></th>
     <th><h2>Importe</h2></th>
   </tr>
-  {% for fecha in historial %}
+  {% for orden in historial %}
   <tr>
-    <td>{{fecha}}
+    <td>{{orden[0]}}
       <div class="detalle_compra">
         <!-- Tabla de detalle de compra -->
         <table>
-          {% for pelicula in historial[fecha][1] %}
+          {% for pelicula in orden[2] %}
           <tr>
             <td>{{pelicula[0]}}</td>
-            <td>{{pelicula[2]}} x {{pelicula[1]|round(2)}}€</td>
+            <td>{{pelicula[1]}} x {{pelicula[2]}}€</td>
           </tr>
           {% endfor %}
         </table>
       </div>
     </td>
-    <td>{{historial[fecha][0]|round(2)}}€</td>
+    <td>{{orden[1]}}€</td>
   </tr>
   {% endfor %}
 </table>

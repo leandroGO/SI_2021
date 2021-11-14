@@ -327,7 +327,7 @@ def historial():
     if request.method == 'POST' and "incremento" in request.form:
         database.db_addBalance(email, request.form["incremento"])
 
-    historial = []
+    historial = database.db_getHistory(email)
 
     saldo, puntos, tarjeta = database.db_getUserFinancialInfo(email)
     tarjeta_ofuscada = tarjeta[-4:].rjust(len(tarjeta), '*')

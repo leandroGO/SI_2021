@@ -427,16 +427,25 @@ def db_getHistory(email):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = ("SELECT orderdetail.prod_id, quantity, "
-                 "movietitle || ' (' || description || ')' "
-                 "FROM customers "
-                 "NATURAL JOIN orders "
-                 "NATURAL JOIN orderdetail "
-                 "INNER JOIN products "
-                 "ON(orderdetail.prod_id = products.prod_id) "
-                 "NATURAL JOIN imdb_movies "
-                 f"WHERE email = '{email}' AND status is NULL")
-        db_result = list(db_conn.execute(query))
+        query = ("SELECT orderid, orderdate, totalamount "
+                 "FROM orders "
+                 "NATURAL JOIN customers "
+                 f"WHERE email = '{email}' AND status IS NOT NULL "
+                 "ORDER BY orderdate DESC")
+        orders = db_conn.execute(query)
+
+        db_result = []
+        for row in orders:
+            query = ("SELECT "
+                     "movietitle || ' (' || description || ')', "
+                     "quantity, orderdetail.price "
+                     "FROM orderdetail "
+                     "INNER JOIN products "
+                     "ON(orderdetail.prod_id = products.prod_id) "
+                     "NATURAL JOIN imdb_movies "
+                     f"WHERE orderid = {row['orderid']}")
+            details = list(db_conn.execute(query))
+            db_result.append((row['orderdate'], row['totalamount'], details))
 
         db_conn.close()
         return db_result
