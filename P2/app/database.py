@@ -445,6 +445,38 @@ def db_getHistory(email):
 
         return []
 
+def db_addBalance(email, amount):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("UPDATE customers "
+                 f"SET balance = balance + {amount} "
+                 f"WHERE email = '{email}'")
+        db_conn.execute(query)
+        db_conn.close()
+    except:
+        _exceptionHandler(db_conn)
+
+def db_getUserFinancialInfo(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("SELECT balance, loyalty, creditcard "
+                 "FROM customers "
+                 f"WHERE email = '{email}'")
+        db_result = list(db_conn.execute(query))[0]
+
+        db_conn.close()
+        return db_result
+    except:
+        _exceptionHandler(db_conn)
+        return []
+
+
 def db_getTopActors(genre='Action', n_top=10):
     try:
         # conexion a la base de datos

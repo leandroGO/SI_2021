@@ -321,29 +321,16 @@ def historial():
     if "usuario" not in session:
         return redirect(url_for('login'))
 
-    username = session["usuario"]
-    path = os.path.join(app.root_path, "../usuarios/", username,
-                        "historial.json")
+    generos = database.db_genres()
+    email = session["email"]
 
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            historial = json.load(f)
-    else:
-        historial = dict()
-
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        generos = json.load(json_data)["generos"]
-
-    user_data = cargar_datos_usuario(username)
     if request.method == 'POST' and "incremento" in request.form:
-        user_data["saldo"] += float(request.form["incremento"])
-        guardar_datos_usuario(username, user_data)
+        database.db_addBalance(email, request.form["incremento"])
 
-    saldo = user_data["saldo"]
-    tarjeta = user_data["tarjeta"]
+    historial = []
+
+    saldo, puntos, tarjeta = database.db_getUserFinancialInfo(email)
     tarjeta_ofuscada = tarjeta[-4:].rjust(len(tarjeta), '*')
-    puntos = int(user_data["puntos"])   # Por si acaso, debería ser entero
     return render_template("historial.html", generos=generos,
                            historial=historial, saldo=saldo, puntos=puntos,
                            tarjeta=tarjeta_ofuscada)
