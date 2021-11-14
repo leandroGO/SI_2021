@@ -245,6 +245,10 @@ body {
     text-align:right;
 }
 
+.top_actors th:last-child, .top_actors td:last-child {
+    text-align:left;
+}
+
 .historial tr:nth-child(even) {
     background-color: rgba(128, 128, 128, 0.4);
 }

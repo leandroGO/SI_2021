@@ -2,6 +2,28 @@
 
 {% block content %}
 
+{% if top_actors %}
+  <table class="historial top_actors">
+    <tr>
+      <th><h2>Actor</h2></th>
+      <th><h2>Num</h2></th>
+      <th><h2>Debut</h2></th>
+      <th><h2>Film</h2></th>
+      <th><h2>Director</h2></th>
+    </tr>
+    {% for row in top_actors %}
+    <tr>
+      <td>{{row['actor']}}</td>
+      <td>{{row['num']}}</td>
+      <td>{{row['debut']}}</td>
+      <td><a href={{url_for('pelicula', id=row['movieid'])}}>{{row['film']}}</a></td>
+      <td>{{row['director']}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endif %}
+
 {% if not lista %}
 <p> No se han encontrado resultados </p>
 {% else %}

@@ -16,8 +16,8 @@ def db_movieList():
         db_conn = None
         db_conn = db_engine.connect()
 
-        #Tomaoms 20 peliculas de la BD
-        query = "SELECT * FROM imdb_movies ORDER BY year DESC LIMIT 25"
+        # Tomamos 25 peliculas de la BD
+        query = ("SELECT * FROM imdb_movies ORDER BY year DESC LIMIT 25")
         db_result = db_conn.execute(query)
 
         db_conn.close()
@@ -33,7 +33,7 @@ def db_genres():
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = "SELECT genre from imdb_genres"
+        query = ("SELECT genre FROM imdb_genres")
         db_result = db_conn.execute(query)
 
         db_conn.close()
@@ -50,9 +50,15 @@ def db_search(keyword, genre):
         db_conn = db_engine.connect()
 
         if genre is None:
-            query = f"SELECT * FROM imdb_movies WHERE movietitle ILIKE '%%{keyword}%%'"
+            query = ("SELECT * "
+                     "FROM imdb_movies "
+                     f"WHERE movietitle ILIKE '%%{keyword}%%'")
         else:
-            query = f"SELECT * FROM imdb_movies NATURAL JOIN imdb_moviegenres WHERE movietitle ILIKE '%%{keyword}%%' AND genre = '{genre}'"
+            query = (f"SELECT * "
+                     "FROM imdb_movies "
+                     "NATURAL JOIN imdb_moviegenres "
+                     f"WHERE movietitle ILIKE '%%{keyword}%%' "
+                     f"AND genre = '{genre}'")
         db_result = db_conn.execute(query)
 
         db_conn.close()
@@ -68,10 +74,17 @@ def db_movieInfo(id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT movieid, movietitle, year FROM imdb_movies WHERE movieid = {id}"
+        query = ("SELECT movieid, movietitle, year "
+                 "FROM imdb_movies "
+                 f"WHERE movieid = {id}")
         info = list(db_conn.execute(query))
 
-        query = f"SELECT actorname FROM imdb_movies NATURAL JOIN imdb_actormovies NATURAL JOIN imdb_actors WHERE movieid = {id} ORDER BY creditsposition"
+        query = ("SELECT actorname "
+                 "FROM imdb_movies "
+                 "NATURAL JOIN imdb_actormovies "
+                 "NATURAL JOIN imdb_actors "
+                 f"WHERE movieid = {id} "
+                 "ORDER BY creditsposition")
         db_result = list(db_conn.execute(query))
         reparto = [actor[0] for actor in db_result]
         if len(reparto) >= 1:
@@ -79,7 +92,11 @@ def db_movieInfo(id):
         else:
             reparto = None
 
-        query = f"SELECT genre FROM imdb_movies NATURAL JOIN imdb_moviegenres NATURAL JOIN imdb_genres WHERE movieid = {id}"
+        query = ("SELECT genre "
+                 "FROM imdb_movies "
+                 "NATURAL JOIN imdb_moviegenres "
+                 "NATURAL JOIN imdb_genres "
+                 f"WHERE movieid = {id}")
         db_result = list(db_conn.execute(query))
         generos = [genero[0] for genero in db_result]
         if len(generos) >= 1:
@@ -87,7 +104,11 @@ def db_movieInfo(id):
         else:
             generos = None
 
-        query = f"SELECT directorname FROM imdb_movies NATURAL JOIN imdb_directormovies NATURAL JOIN imdb_directors WHERE movieid = {id}"
+        query = ("SELECT directorname "
+                 "FROM imdb_movies "
+                 "NATURAL JOIN imdb_directormovies "
+                 "NATURAL JOIN imdb_directors "
+                 f"WHERE movieid = {id}")
         db_result = list(db_conn.execute(query))
         directores = [director[0] for director in db_result]
         if len(directores) >= 1:
@@ -95,7 +116,11 @@ def db_movieInfo(id):
         else:
             directores = None
 
-        query = f"SELECT prod_id, description, price FROM imdb_movies NATURAL JOIN products NATURAL JOIN inventory WHERE movieid = {id} AND stock > 0"
+        query = ("SELECT prod_id, description, price "
+                 "FROM imdb_movies "
+                 "NATURAL JOIN products "
+                 "NATURAL JOIN inventory "
+                 f"WHERE movieid = {id} AND stock > 0")
         precios = list(db_conn.execute(query))
 
         db_conn.close()
@@ -112,7 +137,9 @@ def db_productCheck(id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT DISTINCT prod_id FROM inventory WHERE prod_id = {id} AND stock > 0"
+        query = ("SELECT DISTINCT prod_id "
+                 "FROM inventory "
+                 f"WHERE prod_id = {id} AND stock > 0")
         ret = len(list(db_conn.execute(query))) > 0
 
         db_conn.close()
@@ -128,7 +155,7 @@ def db_add(user, id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f""
+        query = (f"")
         db_conn.execute(query)
 
         db_conn.close()
@@ -151,7 +178,10 @@ def db_getTitle(id):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT DISTINCT movietitle FROM imdb_movies NATURAL JOIN products WHERE prod_id = {id}"
+        query = ("SELECT movietitle || ' (' || description || ')'"
+                 "FROM imdb_movies "
+                 "NATURAL JOIN products "
+                 f"WHERE prod_id = {id}")
         title = list(db_conn.execute(query))[0][0]
 
         db_conn.close()
@@ -167,7 +197,9 @@ def db_userCheck(email):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"SELECT DISTINCT email FROM customers WHERE email = '{email}'"
+        query = ("SELECT DISTINCT email "
+                 "FROM customers "
+                 f"WHERE email = '{email}'")
         ret = len(list(db_conn.execute(query))) > 0
 
         db_conn.close()
@@ -184,7 +216,12 @@ def db_regUser(user_data):
         db_conn = None
         db_conn = db_engine.connect()
 
-        query = f"INSERT INTO customers(username, password, email, creditcard, address1, balance, loyalty) VALUES ('{user_data['name']}', '{user_data['password']}', '{user_data['email']}', '{user_data['tarjeta']}', '{user_data['direccion']}', {user_data['saldo']}, {user_data['puntos']})"
+        query = ("INSERT INTO customers(username, password, email, "
+                 "creditcard, address1, balance, loyalty) "
+                 f"VALUES ('{user_data['name']}', '{user_data['password']}', "
+                 f"'{user_data['email']}', '{user_data['tarjeta']}', "
+                 f"'{user_data['direccion']}', {user_data['saldo']}, "
+                 f"{user_data['puntos']})")
         db_conn.execute(query)
 
         db_conn.close()
@@ -201,7 +238,9 @@ def db_loadUserData(email):
         db_conn = db_engine.connect()
         user_data = {}
 
-        query = f"SELECT username, password FROM customers WHERE email = '{email}'"
+        query = ("SELECT username, password "
+                 "FROM customers "
+                 f"WHERE email = '{email}'")
         db_result = list(db_conn.execute(query))
 
         user_data["name"] = db_result[0][0]
@@ -209,6 +248,26 @@ def db_loadUserData(email):
 
         db_conn.close()
         return user_data
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
+def db_getTopActors(genre, n_top):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("SELECT movieid, actor, num, debut, film, director "
+                 f"FROM getTopActors('{genre}') "
+                 "INNER JOIN imdb_movies ON (movietitle = film) "
+                 "ORDER BY num DESC "
+                 f"LIMIT {n_top}")
+        db_result = db_conn.execute(query)
+
+        db_conn.close()
+        return db_result
     except:
         _exceptionHandler(db_conn)
 

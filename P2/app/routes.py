@@ -15,6 +15,7 @@ def home():
 
     if request.method == "POST":
         data = request.form
+        top_actors = None
 
         titulo_buscado = data["busqueda"]
         if data["genero"] == "todas":
@@ -23,9 +24,10 @@ def home():
             lista = database.db_search(titulo_buscado, data["genero"])
     else:
         lista = database.db_movieList()
+        top_actors = database.db_getTopActors('Action', 10)
 
     return render_template("lista_peliculas.html", generos=generos,
-                           lista=lista)
+                           lista=lista, top_actors=top_actors)
 
 
 @app.route('/login', methods=['GET', 'POST'])
