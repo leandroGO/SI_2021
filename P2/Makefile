@@ -13,7 +13,7 @@ create_db:
 	gunzip -c dump_v1.4.sql.gz | psql si1 -U alumnodb
 
 run_actualiza:
-	cat actualiza.sql | psql si1 -U alumnodb
+	cat SQL/actualiza.sql | psql si1 -U alumnodb
 
 test:
 	@echo es un test

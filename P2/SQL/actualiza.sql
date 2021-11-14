@@ -119,14 +119,13 @@ ALTER TABLE alerts
         ON DELETE CASCADE,
     ADD CONSTRAINT alerts_pkey PRIMARY KEY (prod_id, alert_timestamp);
 
-/*--- customer ---*/
+/*--- customers ---*/
 ALTER TABLE customers
     ADD loyalty integer NOT NULL
         CONSTRAINT customer_loyalty_default
         DEFAULT (0),
     ADD balance numeric NULL,
-    ADD CONSTRAINT customer_unique_email
-        UNIQUE (email),
+    ADD CONSTRAINT customer_unique_email UNIQUE (email),
     ALTER COLUMN firstname DROP NOT NULL,
     ALTER COLUMN lastname DROP NOT NULL,
     ALTER COLUMN city DROP NOT NULL,
@@ -177,20 +176,20 @@ $$ LANGUAGE SQL;
 SELECT setCustomersBalance(100);
 
 /*--- setPrice.sql ---*/
-\ir setPrice.sql
+\ir SQL/setPrice.sql
 
 /*--- setOrderAmount ---*/
-\ir setOrderAmount.sql
+\ir SQL/setOrderAmount.sql
 SELECT setOrderAmount();
 
 /*--- getTopSales ---*/
-\ir getTopSales.sql
+\ir SQL/getTopSales.sql
 
 /*--- getTopActors ---*/
-\ir getTopActors.sql
+\ir SQL/getTopActors.sql
 
 /*--- updOrders ---*/
-\ir updOrders.sql
+\ir SQL/updOrders.sql
 
 /*--- updInventoryAndCustomer ---*/
-\ir updInventoryAndCustomer.sql
+\ir SQL/updInventoryAndCustomer.sql
