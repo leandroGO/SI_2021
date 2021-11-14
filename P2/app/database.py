@@ -386,7 +386,7 @@ def db_getTopActors(genre='Action', n_top=10):
         query = ("SELECT movieid, actor, num, debut, film, director "
                  f"FROM getTopActors('{genre}') "
                  "INNER JOIN imdb_movies ON (movietitle = film) "
-                 "ORDER BY num DESC "
+                 "ORDER BY num DESC, film DESC "
                  f"LIMIT {n_top}")
         db_result = db_conn.execute(query)
 
