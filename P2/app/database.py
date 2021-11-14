@@ -188,7 +188,27 @@ def db_regUser(user_data):
         db_conn.execute(query)
 
         db_conn.close()
-        return
+        return True
+    except:
+        _exceptionHandler(db_conn)
+
+        return False
+
+def db_loadUserData(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+        user_data = {}
+
+        query = f"SELECT username, password FROM customers WHERE email = '{email}'"
+        db_result = list(db_conn.execute(query))
+
+        user_data["name"] = db_result[0][0]
+        user_data["password"] = db_result[0][1]
+
+        db_conn.close()
+        return user_data
     except:
         _exceptionHandler(db_conn)
 

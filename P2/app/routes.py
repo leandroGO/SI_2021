@@ -33,38 +33,37 @@ def login():
     update_cookie = False
     if "usuario" in session:
         return redirect(url_for('home'))
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        generos = json.load(json_data)["generos"]
+    generos = database.db_genres()
 
     if request.method == 'GET':  # El cliente solicita el formulario
         session["url_previo"] = request.referrer
-        last_username = request.cookies.get("last_username")
-        if last_username:
-            username = last_username
+        last_user_email = request.cookies.get("user_email")
+        if last_user_email:
+            user_email = last_user_email
         else:
-            username = None
+            user_email = None
 
         return render_template("login.html", generos=generos,
-                               username=username)
+                               user_email=user_email)
 
     # if request.method == 'POST'
-    if "user" in request.form:
-        username = request.form["user"]
-        user_path = os.path.join(app.root_path, "../usuarios/" + username)
-        if not os.path.exists(user_path):
+    if "email" in request.form:
+        email = request.form["email"]
+        if not database.db_userCheck(email):
             return render_template("login.html", generos=generos,
-                                   error=f"El usuario {username} no existe")
+                                   error=f"El email {email} no está registrado")
 
-        user_data = cargar_datos_usuario(username)
+        user_data = database.db_loadUserData(email)
+        if user_data == None:
+            return render_template("login.html", generos=generos,
+                                    user_email=email,
+                                    error=f"Error en el acceso a base de datos")
 
         if "password" in request.form:
             submitted_password = request.form["password"]
-            salt = user_data["salt"]
-            h = hashlib.blake2b(salt + submitted_password.encode('utf-8'))
-            if h.hexdigest() != user_data["password_salted_hash"]:
+            if submitted_password != user_data["password"]:
                 return render_template("login.html", generos=generos,
-                                       username=username,
+                                       user_email=email,
                                        error="Contraseña incorrecta")
 
             session["usuario"] = user_data["name"]
@@ -80,7 +79,7 @@ def login():
     response = make_response(redirect(url_destino))
 
     if update_cookie:
-        response.set_cookie("last_username", request.form["user"])
+        response.set_cookie("last_user_email", request.form["email"])
 
     return response
 
@@ -112,7 +111,10 @@ def register():
         user_data["saldo"] = randrange(101)
         user_data["puntos"] = 0
         print("No va mal")
-        database.db_regUser(user_data)
+        ret = database.db_regUser(user_data)
+        if not ret:
+            return render_template("registro.html", form=request.form,
+                                   error=f"Error en el acceso a base de datos")
 
     return redirect(url_for('login'))
 
@@ -366,15 +368,6 @@ def guardar_compra():
     session.pop("carrito")
 
     return redirect(url_for('historial'))
-
-
-def cargar_datos_usuario(username):
-    '''Carga los datos de un usuario existente (no usar en otro caso)'''
-    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "rb") as f:
-        user_data = pickle.load(f)
-
-    return user_data
 
 
 def guardar_datos_usuario(username, user_data):
