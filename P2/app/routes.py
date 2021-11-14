@@ -91,42 +91,28 @@ def register():
         return redirect(url_for('home'))
 
     if request.method == 'GET':
-        path = os.path.join(app.root_path, "static/peliculas.json")
-        with open(path) as json_data:
-            generos = json.load(json_data)["generos"]
+        generos = database.db_genres()
         return render_template("registro.html", generos=generos)
 
     # if request.method == 'POST'
-    if "reg_user" in request.form:
-        username = request.form["reg_user"]
-        user_path = os.path.join(app.root_path, "../usuarios/", username)
-        if os.path.exists(user_path):
-            return render_template("registro.html", form=request.form,
-                                   error=f"El usuario {username} ya existe")
+    if "reg_email" in request.form:
+        email = request.form["reg_email"]
 
-        try:
-            # Todos los permisos para el usuario, solo lectura para el resto
-            old_umask = os.umask(0o033)
-            os.makedirs(user_path)
-        finally:
-            os.umask(old_umask)
+        if database.db_userCheck(email):
+            return render_template("registro.html", form=request.form,
+                                   error=f"El email {email} ya ha sido registrado anteriormente")
 
         # Almacena los datos
         user_data = {}
         user_data["name"] = request.form["reg_user"]
+        user_data["password"] = request.form["reg_password"]
         user_data["email"] = request.form["reg_email"]
         user_data["tarjeta"] = request.form["reg_tarjeta"]
         user_data["direccion"] = request.form["reg_direccion"]
         user_data["saldo"] = randrange(101)
         user_data["puntos"] = 0
-
-        salt = os.urandom(16)
-        user_data["salt"] = salt
-        h = hashlib.blake2b(salt +
-                            request.form["reg_password"].encode('utf-8'))
-        user_data["password_salted_hash"] = h.hexdigest()
-
-        guardar_datos_usuario(username, user_data)
+        print("No va mal")
+        database.db_regUser(user_data)
 
     return redirect(url_for('login'))
 

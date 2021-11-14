@@ -23,12 +23,7 @@ def db_movieList():
         db_conn.close()
         return list(db_result)
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
 
@@ -44,12 +39,7 @@ def db_genres():
         db_conn.close()
         return [genre[0] for genre in list(db_result)]
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
 
@@ -68,12 +58,7 @@ def db_search(keyword, genre):
         db_conn.close()
         return list(db_result)
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
 
@@ -116,12 +101,7 @@ def db_movieInfo(id):
         db_conn.close()
         return (info, reparto, generos, directores, precios)
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
 
@@ -138,12 +118,7 @@ def db_productCheck(id):
         db_conn.close()
         return ret
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return False
 
@@ -159,12 +134,7 @@ def db_add(user, id):
         db_conn.close()
         return
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
 
@@ -187,11 +157,48 @@ def db_getTitle(id):
         db_conn.close()
         return title
     except:
-        if db_conn is not None:
-            db_conn.close()
-        print("Exception in DB access:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stderr)
-        print("-"*60)
+        _exceptionHandler(db_conn)
 
         return None
+
+def db_userCheck(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"SELECT DISTINCT email FROM customers WHERE email = '{email}'"
+        ret = len(list(db_conn.execute(query))) > 0
+
+        db_conn.close()
+        return ret
+    except:
+        _exceptionHandler(db_conn)
+
+        return False
+
+
+def db_regUser(user_data):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = f"INSERT INTO customers(username, password, email, creditcard, address1, balance, loyalty) VALUES ('{user_data['name']}', '{user_data['password']}', '{user_data['email']}', '{user_data['tarjeta']}', '{user_data['direccion']}', {user_data['saldo']}, {user_data['puntos']})"
+        db_conn.execute(query)
+
+        db_conn.close()
+        return
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
+# Funciones auxiliares
+def _exceptionHandler(db_conn):
+    if db_conn is not None:
+            db_conn.close()
+    print("Exception in DB access:")
+    print("-"*60)
+    traceback.print_exc(file=sys.stderr)
+    print("-"*60)
