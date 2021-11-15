@@ -257,54 +257,51 @@ def buy():
 def saldo():
     generos = database.db_genres()
 
-    if "usuario" not in session:
+    if "email" not in session:
         return redirect(url_for('login'))
 
-    if "carrito" not in session or "subtotal" not in session:
+    if not database.db_cartCheck(session["email"]) or "subtotal" not in session:
         return render_template("error.html", generos=generos)
 
-    username = session["usuario"]
-    user_data = cargar_datos_usuario(username)
+    user_data = database.db_loadUserData(session["email"])
 
     # Actualizacion saldo
     if session["subtotal"] > user_data["saldo"]:
-        return redirect(url_for('home'))
+        return render_template("error.html", generos=generos)
 
     user_data["saldo"] -= session["subtotal"]
 
     # Actualizacion puntos
     user_data["puntos"] += int(session["subtotal"]*5)
 
-    guardar_datos_usuario(username, user_data)
-    return guardar_compra()
+    database.db_saveUserData(session["email"], user_data)
+    database.db_saveOrder(session["email"])
+    database.db_createCart(session["email"])
+    return redirect(url_for('historial'))
 
 
 @app.route('/puntos')
 def puntos():
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        generos = json.load(json_data)["generos"]
+    generos = database.db_genres()
 
-    if "usuario" not in session:
+    if "email" not in session:
         return redirect(url_for('login'))
 
-    if "carrito" not in session or "subtotal" not in session:
+    if not database.db_cartCheck(session["email"]) or "subtotal" not in session:
         return render_template("error.html", generos=generos)
 
-    username = session["usuario"]
-    user_data = cargar_datos_usuario(username)
+    user_data = database.db_loadUserData(session["email"])
 
     # Actualizacion saldo
     if session["subtotal"]*100 > user_data["puntos"]:
-        return redirect(url_for('home'))
+        return render_template("error.html", generos=generos)
 
-    user_data["puntos"] -= int(session["subtotal"]*100)
+    user_data["puntos"] -= int(session["subtotal"]*95)
 
-    # Actualizacion puntos
-    user_data["puntos"] += int(session["subtotal"]*5)
-
-    guardar_datos_usuario(username, user_data)
-    return guardar_compra()
+    database.db_saveUserData(session["email"], user_data)
+    database.db_saveOrder(session["email"])
+    database.db_createCart(session["email"])
+    return redirect(url_for('historial'))
 
 
 @app.route('/historial', methods=['GET', 'POST'])
@@ -331,43 +328,3 @@ def historial():
 def ajax():
     nusers = randrange(1000)
     return "{} usuarios conectados".format(nusers)
-
-
-# Funciones auxiliares
-def guardar_compra():
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path, "r") as f:
-        peliculas = json.load(f)["peliculas"]
-
-    username = session["usuario"]
-
-    path = os.path.join(app.root_path, "../usuarios/", username,
-                        "historial.json")
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            historial = json.load(f)
-    else:
-        historial = dict()
-
-    # Actualizacion historial
-    subtotal = session["subtotal"]
-    compra = []
-    for item in session["carrito"]:
-        compra.append((peliculas[item]["titulo"], peliculas[item]["precio"],
-                       session["carrito"][item]))
-    historial[datetime.now().strftime("%Y-%m-%d (%H:%M:%S)")] = (subtotal,
-                                                                 compra)
-
-    with open(path, "w") as f:
-        json.dump(historial, f)
-
-    session.pop("carrito")
-
-    return redirect(url_for('historial'))
-
-
-def guardar_datos_usuario(username, user_data):
-    '''Guarda los datos de un usuario existente (no usar en otro caso)'''
-    path = os.path.join(app.root_path, "../usuarios/", username, "datos.dat")
-    with open(path, "wb") as f:
-        pickle.dump(user_data, f)

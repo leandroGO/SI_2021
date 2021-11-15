@@ -482,6 +482,45 @@ def db_getCartPrice(email):
         return None
 
 
+def db_saveUserData(email, user_data):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("UPDATE customers "
+                 f"SET balance = {user_data['saldo']}, "
+                 f"loyalty = {user_data['puntos']}")
+        db_conn.execute(query)
+
+        db_conn.close()
+        return None
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
+
+def db_saveOrder(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("UPDATE orders "
+                 f"SET status = 'Paid', "
+                 f"orderdate = CURRENT_DATE")
+        db_conn.execute(query)
+
+        db_conn.close()
+        return None
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
+
+
 def db_getHistory(email):
     # TODO
     try:
