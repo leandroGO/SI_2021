@@ -306,13 +306,15 @@ def db_loadUserData(email):
         db_conn = db_engine.connect()
         user_data = {}
 
-        query = ("SELECT username, password "
+        query = ("SELECT username, password, balance, loyalty "
                  "FROM customers "
                  f"WHERE email = '{email}'")
         db_result = list(db_conn.execute(query))
 
         user_data["name"] = db_result[0][0]
         user_data["password"] = db_result[0][1]
+        user_data["saldo"] = db_result[0][2]
+        user_data["puntos"] = db_result[0][3]
 
         db_conn.close()
         return user_data
@@ -403,13 +405,15 @@ def db_getCart(email):
         db_conn = db_engine.connect()
 
         query = ("SELECT orderdetail.prod_id, quantity, "
-                 "movietitle || ' (' || description || ')', movieid "
+                 "movietitle || ' (' || description || ')', movieid, quantity > stock "
                  "FROM customers "
                  "NATURAL JOIN orders "
                  "NATURAL JOIN orderdetail "
                  "INNER JOIN products "
                  "ON(orderdetail.prod_id = products.prod_id) "
                  "NATURAL JOIN imdb_movies "
+                 "INNER JOIN inventory "
+                 "ON(inventory.prod_id = products.prod_id) "
                  f"WHERE email = '{email}' AND status is NULL")
         db_result = list(db_conn.execute(query))
 
@@ -419,6 +423,64 @@ def db_getCart(email):
         _exceptionHandler(db_conn)
 
         return []
+
+
+def db_cartCheck(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        query = ("SELECT orderid, COUNT(*)"
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 f"WHERE email = '{email}' AND status IS NULL "
+                 "GROUP BY orderid")
+        db_result = list(db_conn.execute(query))
+
+        if len(db_result) == 0 or db_result[0][1] == 0:
+            db_conn.close()
+            return False
+
+        db_conn.close()
+        return True
+    except:
+        _exceptionHandler(db_conn)
+
+        return False
+
+
+def db_getCartPrice(email):
+    try:
+        # conexion a la base de datos
+        db_conn = None
+        db_conn = db_engine.connect()
+
+        # Actualizacion de precio en orderdetail
+        query = ("UPDATE orderdetail "
+                 "SET price = products.price "
+                 "FROM customers NATURAL JOIN orders, products "
+                 f"WHERE email = '{email}' AND status IS NULL "
+                 "AND orderdetail.orderid = orders.orderid AND products.prod_id = orderdetail.prod_id")
+        db_conn.execute(query)
+
+        # Calculo total carrito
+        query = ("SELECT orderid, SUM(price*quantity)"
+                 "FROM customers "
+                 "NATURAL JOIN orders "
+                 "NATURAL JOIN orderdetail "
+                 f"WHERE email = '{email}' AND status IS NULL "
+                 "GROUP BY orderid")
+        db_result = list(db_conn.execute(query))
+
+        db_conn.close()
+        return db_result[0][1]
+    except:
+        _exceptionHandler(db_conn)
+
+        return None
+
 
 def db_getHistory(email):
     # TODO

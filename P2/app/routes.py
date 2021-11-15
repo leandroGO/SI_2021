@@ -233,27 +233,20 @@ def delete(id):
 
 @app.route('/buy')
 def buy():
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        data = json.load(json_data)
-        peliculas = data["peliculas"]
-        generos = data["generos"]
+    generos = database.db_genres()
 
-    if "usuario" not in session:
+    if "email" not in session:
         return redirect(url_for('login'))
 
-    if "carrito" not in session or len(session["carrito"]) == 0:
+    if not database.db_cartCheck(session["email"]):
         return render_template("error.html", generos=generos)
 
     # Usuario con sesion iniciada
-    username = session["usuario"]
-    user_data = cargar_datos_usuario(username)
+    user_data = database.db_loadUserData(session["email"])
     saldo = user_data["saldo"]
     puntos = user_data["puntos"]
 
-    count = 0
-    for pelicula in session["carrito"]:
-        count += peliculas[pelicula]["precio"] * session["carrito"][pelicula]
+    count = database.db_getCartPrice(session["email"])
 
     session["subtotal"] = count
     return render_template("pago.html", generos=generos, precio=count,
@@ -262,9 +255,7 @@ def buy():
 
 @app.route('/saldo')
 def saldo():
-    path = os.path.join(app.root_path, "static/peliculas.json")
-    with open(path) as json_data:
-        generos = json.load(json_data)["generos"]
+    generos = database.db_genres()
 
     if "usuario" not in session:
         return redirect(url_for('login'))
