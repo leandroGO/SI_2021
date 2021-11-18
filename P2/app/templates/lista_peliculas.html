@@ -3,6 +3,7 @@
 {% block content %}
 
 {% if top_actors %}
+<div id="top">
   <form id="top_actors_params" action="{{url_for('home')}}" method="GET">
     <input type="number" name="n_top" value=10>
     <select name="genero">
@@ -13,13 +14,16 @@
     </select>
     <input type="submit" value="Buscar">
   </form>
+  {% if top_actors.rowcount == 0 %}
+  <p>No hay resultados</p>
+  {% else %}
   <table class="historial top_actors">
     <tr>
-      <th><h2>Actor</h2></th>
-      <th><h2>Num</h2></th>
-      <th><h2>Debut</h2></th>
-      <th><h2>Film</h2></th>
-      <th><h2>Director</h2></th>
+      <th><h3>Actor</h3></th>
+      <th><h3>Num</h3></th>
+      <th><h3>Debut</h3></th>
+      <th><h3>Film</h3></th>
+      <th><h3>Director</h3></th>
     </tr>
     {% for row in top_actors %}
     <tr>
@@ -31,6 +35,8 @@
     </tr>
     {% endfor %}
   </table>
+  </div>
+  {% endif %}
 
 {% endif %}
 
