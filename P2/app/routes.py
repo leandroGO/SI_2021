@@ -282,7 +282,7 @@ def puntos():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    if not database.db_cartCheck(session["email"]) or "subtotal" not in session:
+    if not database.db_cartCheck(session["email"]):
         return render_template("error.html", generos=generos)
 
     user_data = database.db_loadUserData(session["email"])
