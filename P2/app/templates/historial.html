@@ -2,7 +2,7 @@
 
 {% block content %}
 <div id="saldo_info">
-  <p><strong>Saldo actual: </strong>{{saldo|round(2)}}€</p>
+  <p><strong>Saldo actual: </strong>{{saldo}}€</p>
   <form method="POST">
     <label for="incremento"><strong>Aumentar saldo</strong> ({{tarjeta}}):</label>
     <input name="incremento" id="incremento" type="number" min="0.01" step="0.01" required>

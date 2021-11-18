@@ -323,7 +323,6 @@ def db_loadUserData(email):
 
         return None
 
-
 def db_createCart(email):
     try:
         # conexion a la base de datos
@@ -466,7 +465,7 @@ def db_getCartPrice(email):
         db_conn.execute(query)
 
         # Calculo total carrito
-        query = ("SELECT totalamount"
+        query = ("SELECT totalamount "
                  "FROM customers "
                  "NATURAL JOIN orders "
                  f"WHERE email = '{email}' AND status IS NULL ")
@@ -474,25 +473,6 @@ def db_getCartPrice(email):
 
         db_conn.close()
         return db_result[0][0]
-    except:
-        _exceptionHandler(db_conn)
-
-        return None
-
-
-def db_saveUserData(email, user_data):
-    try:
-        # conexion a la base de datos
-        db_conn = None
-        db_conn = db_engine.connect()
-
-        query = ("UPDATE customers "
-                 f"SET balance = {user_data['saldo']}, "
-                 f"loyalty = {user_data['puntos']}")
-        db_conn.execute(query)
-
-        db_conn.close()
-        return None
     except:
         _exceptionHandler(db_conn)
 
@@ -518,9 +498,7 @@ def db_saveOrder(email):
         return None
 
 
-
 def db_getHistory(email):
-    # TODO
     try:
         # conexion a la base de datos
         db_conn = None

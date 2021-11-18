@@ -270,12 +270,6 @@ def saldo():
     if count > user_data["saldo"]:
         return render_template("error.html", generos=generos)
 
-    user_data["saldo"] -= count
-
-    # Actualizacion puntos
-    user_data["puntos"] += int(count*5)
-
-    database.db_saveUserData(session["email"], user_data)
     database.db_saveOrder(session["email"])
     database.db_createCart(session["email"])
     return redirect(url_for('historial'))
@@ -298,9 +292,6 @@ def puntos():
     if count*100 > user_data["puntos"]:
         return render_template("error.html", generos=generos)
 
-    user_data["puntos"] -= int(count*95)
-
-    database.db_saveUserData(session["email"], user_data)
     database.db_saveOrder(session["email"])
     database.db_createCart(session["email"])
     return redirect(url_for('historial'))
