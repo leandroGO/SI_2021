@@ -248,7 +248,6 @@ def buy():
 
     count = database.db_getCartPrice(session["email"])
 
-    session["subtotal"] = count
     return render_template("pago.html", generos=generos, precio=count,
                            saldo=saldo, puntos=puntos)
 
@@ -260,19 +259,21 @@ def saldo():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    if not database.db_cartCheck(session["email"]) or "subtotal" not in session:
+    if not database.db_cartCheck(session["email"]):
         return render_template("error.html", generos=generos)
 
     user_data = database.db_loadUserData(session["email"])
+    count = database.db_getCartPrice(session["email"])
+
 
     # Actualizacion saldo
-    if session["subtotal"] > user_data["saldo"]:
+    if count > user_data["saldo"]:
         return render_template("error.html", generos=generos)
 
-    user_data["saldo"] -= session["subtotal"]
+    user_data["saldo"] -= count
 
     # Actualizacion puntos
-    user_data["puntos"] += int(session["subtotal"]*5)
+    user_data["puntos"] += int(count*5)
 
     database.db_saveUserData(session["email"], user_data)
     database.db_saveOrder(session["email"])
@@ -291,12 +292,13 @@ def puntos():
         return render_template("error.html", generos=generos)
 
     user_data = database.db_loadUserData(session["email"])
+    count = database.db_getCartPrice(session["email"])
 
     # Actualizacion saldo
-    if session["subtotal"]*100 > user_data["puntos"]:
+    if count*100 > user_data["puntos"]:
         return render_template("error.html", generos=generos)
 
-    user_data["puntos"] -= int(session["subtotal"]*95)
+    user_data["puntos"] -= int(count*95)
 
     database.db_saveUserData(session["email"], user_data)
     database.db_saveOrder(session["email"])

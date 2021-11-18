@@ -79,6 +79,10 @@ body {
     font-size:2vh;
 }
 
+#top {
+    margin:10px;
+}
+
 /* Lista de películas */
 #menu ul {
     list-style-type:none;

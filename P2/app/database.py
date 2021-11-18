@@ -466,16 +466,14 @@ def db_getCartPrice(email):
         db_conn.execute(query)
 
         # Calculo total carrito
-        query = ("SELECT orderid, SUM(price*quantity)"
+        query = ("SELECT totalamount"
                  "FROM customers "
                  "NATURAL JOIN orders "
-                 "NATURAL JOIN orderdetail "
-                 f"WHERE email = '{email}' AND status IS NULL "
-                 "GROUP BY orderid")
+                 f"WHERE email = '{email}' AND status IS NULL ")
         db_result = list(db_conn.execute(query))
 
         db_conn.close()
-        return db_result[0][1]
+        return db_result[0][0]
     except:
         _exceptionHandler(db_conn)
 
