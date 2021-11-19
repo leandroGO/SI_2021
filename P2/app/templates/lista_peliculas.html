@@ -5,7 +5,7 @@
 {% if top_actors %}
 <div id="top">
   <form id="top_actors_params" action="{{url_for('home')}}" method="GET">
-    <input type="number" name="n_top" value=10>
+    <input type="number" name="n_top" min="1" value=10>
     <select name="genero">
       <option value="Action">Action</option>
       {% for genero in generos %}
