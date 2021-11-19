@@ -479,15 +479,21 @@ def db_getCartPrice(email):
         return None
 
 
-def db_saveOrder(email):
+def db_saveOrder(email, points):
     try:
         # conexion a la base de datos
         db_conn = None
         db_conn = db_engine.connect()
 
+        if points:
+            points_field = "TRUE"
+        else:
+            points_field = "FALSE"
+
         query = ("UPDATE orders "
                  f"SET status = 'Paid', "
-                 f"orderdate = CURRENT_DATE")
+                 f"orderdate = CURRENT_DATE, "
+                 f"points = {points_field}")
         db_conn.execute(query)
 
         db_conn.close()
