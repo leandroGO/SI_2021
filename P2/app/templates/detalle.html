@@ -17,19 +17,22 @@
     {% endif %}
   </ul>
   <br>
+  {% if precios %}
   <form id="product_selector" method="GET" action="{{url_for('add')}}">
-    {% if precios %}
-      Productos disponibles: 
-      <select name="product" id="product">
-        {% for precio in precios %}
-        <option value="{{precio[0]}}">{{precio[1]}} - {{precio[2]}}</option>
-        {% endfor %}
-      </select>
-    {% else %}
-      No hay stock disponible
-    {% endif %}
+    Productos disponibles: 
+    <select name="product" id="product">
+      {% for precio in precios %}
+      <option value="{{precio[0]}}">{{precio[1]}} - {{precio[2]}}</option>
+      {% endfor %}
+    </select>
+
+    <input type="number" name="quantity" min="1" value=1>
+    
     <br>
     <input type="submit" id="anadir_carro" value="Añadir al carrito">
   </form>
+  {% else %}
+    No hay stock disponible
+  {% endif %}
 </div>
 {% endblock %}

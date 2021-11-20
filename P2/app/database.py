@@ -149,7 +149,7 @@ def db_productCheck(id):
 
         return False
 
-def db_add(email, id):
+def db_add(email, id, quantity):
     try:
         # conexion a la base de datos
         db_conn = None
@@ -166,7 +166,7 @@ def db_add(email, id):
 
         if len(db_result) > 0:
             query = ("UPDATE orderdetail "
-                     "SET quantity = quantity + 1 "
+                     f"SET quantity = quantity + {quantity}"
                      f"WHERE orderid = {db_result[0][0]} AND prod_id = {id}")
         else:
             query = ("SELECT orders.orderid "
@@ -175,7 +175,7 @@ def db_add(email, id):
                      f"WHERE email = '{email}' AND status IS NULL")
             orderid = list(db_conn.execute(query))[0][0]
             query = ("INSERT INTO orderdetail(orderid, prod_id, quantity) "
-                     f"VALUES ({orderid}, {id}, 1)")
+                     f"VALUES ({orderid}, {id}, {quantity})")
 
         db_conn.execute(query)
 

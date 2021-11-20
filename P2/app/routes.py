@@ -177,8 +177,9 @@ def carrito():
 def add():
     generos = database.db_genres()
     id = request.args.get("product")
+    quantity = request.args.get("quantity")
 
-    if id is None or not database.db_productCheck(id):
+    if id is None or quantity is None or int(quantity) <= 0 or not database.db_productCheck(id):
         return render_template("error.html", generos=generos)
 
     # Uso de sessions en caso de que el usuario no haya iniciado sesion    
@@ -190,17 +191,17 @@ def add():
 
         # Carrito ya creado sin la pelicula
         elif id not in session["carrito"]:
-            session["carrito"][id] = 1
+            session["carrito"][id] = quantity
 
         # Carrito contiene pelicula, se incrementa cantidad
         else:
-            session["carrito"][id] += 1
+            session["carrito"][id] += quantity
 
         session.modified = True
 
     #Uso de la base de datos para el carrito de cada usuario    
     else:
-        database.db_add(session["email"], id)
+        database.db_add(session["email"], id, quantity)
 
     return redirect(url_for('carrito'))
 
