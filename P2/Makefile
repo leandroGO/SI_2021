@@ -14,6 +14,3 @@ create_db:
 
 run_actualiza:
 	cat SQL/actualiza.sql | psql si1 -U alumnodb
-
-test:
-	@echo es un test
