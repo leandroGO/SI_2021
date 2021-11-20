@@ -160,6 +160,7 @@ def pelicula(id):
 def carrito():
     generos = database.db_genres()
     context = []
+    no_stock = False
 
     if "usuario" not in session:
         if "carrito" in session:
@@ -169,8 +170,12 @@ def carrito():
                 context.append((item, lista[item], title, movieid))
     else:
         context = database.db_getCart(session["email"])
+        for elem in context:
+            if elem[4]:
+                no_stock = True
+                break
 
-    return render_template("carrito.html", generos=generos, lista=context)
+    return render_template("carrito.html", generos=generos, lista=context, no_stock=no_stock)
 
 
 @app.route('/add')

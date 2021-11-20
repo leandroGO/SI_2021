@@ -11,8 +11,9 @@
     </li>
     {% endfor %}
   </ul>
-
-  <a class="boton_pago" href="{{url_for('buy')}}">Finalizar compra</a>
+    {% if not no_stock %}
+      <a class="boton_pago" href="{{url_for('buy')}}">Finalizar compra</a>
+    {% endif %}
   {% else %}
     <p>No hay ninguna película en el carrito</p>
   {% endif %}
