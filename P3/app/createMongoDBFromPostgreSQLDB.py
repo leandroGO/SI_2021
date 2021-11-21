@@ -30,6 +30,7 @@ def _exceptionHandler(db_conn):
     traceback.print_exc(file=sys.stderr)
     print("-"*60)
 
+# Extract ---------------------------------------------------------------------
 # Configura el motor de sqlalchemy
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1",
                           echo=False)
@@ -50,9 +51,6 @@ db_actors = Table('imdb_actors', db_meta, autoload=True,
                      autoload_with=db_engine)
 db_actormovies = Table('imdb_actormovies', db_meta, autoload=True,
                           autoload_with=db_engine)
-
-# Crea la conexión con MongoDB
-mongo_client = MongoClient()
 
 # Extrae id, título y año de las TOP_LIMIT películas británicas más recientes
 query = (select([db_movies.c.movieid,
@@ -78,7 +76,8 @@ q_directors = (select([db_directors.c.directorname])
 q_actors = (select([db_actors.c.actorname])
             .select_from(db_actors.join(db_actormovies,
                          db_actors.c.actorid == db_actormovies.c.actorid))
-            .where(text("movieid = :movieid")))
+            .where(text("movieid = :movieid and creditsposition >= 0"))
+            .order_by(db_actormovies.c.creditsposition))
 for movie in movies:
     movie['title'] = re.sub(r'\s\(.*\)$', '', movie['title'])
     movie['year'] = int(movie['year'])
@@ -92,6 +91,7 @@ for movie in movies:
     db_result = run_query(db_engine, q_actors, movie['movieid'])
     movie['actors'] = [a for a, in db_result]
 
+# Transform -------------------------------------------------------------------
 # Encuentra las películas más relacionadas del top 400 UK
 # Observación: el diccionario está ordenado por year desc
 for m1 in movies:
@@ -116,5 +116,13 @@ for m1 in movies:
         if len(m1['related_movies']) == MAX_RELATED:
             break
 
-for movie in movies:
-    print(movie['title'], movie['most_related_movies'], movie['related_movies'])
+# Load ------------------------------------------------------------------------
+# Crea la conexión con MongoDB
+mongo_client = MongoClient()
+si1_db = mongo_client.si1
+
+# Carga los documentos de movies en la colección topUK
+si1_db.topUK.drop()
+si1_db.topUK.insert_many(movies)
+
+mongo_client.close()
