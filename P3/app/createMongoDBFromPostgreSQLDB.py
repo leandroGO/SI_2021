@@ -9,7 +9,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, tex
 from sqlalchemy.sql import select
 from pymongo import MongoClient
 
-TOP_LIMIT = 10
+TOP_LIMIT = 10  # TODO: cambiar a 400
 
 def run_query(db_engine, query, movieid):
     try:
@@ -88,7 +88,18 @@ for movie in movies:
     movie['directors'] = [d for d, in db_result]
 
     db_result = run_query(db_engine, q_actors, movie['movieid'])
-    movie['actors'] = [d for d, in db_result]
+    movie['actors'] = [a for a, in db_result]
+
+# Encuentra las películas más relacionadas del top 400 UK
+# Observación: el diccionario está ordenado por year desc
+for m1 in movies:
+    m1['most_related_movies'] = []
+    for m2 in movies:
+        if m1 != m2 and set(m1['genres']) == set(m2['genres']):
+            m1['most_related_movies'].append({'title': m2['title'],
+                                              'year': m2['year']})
+        if len(m1['most_related_movies']) == 10:
+            break
 
 for movie in movies:
-    print(movie['title'], movie['year'])
+    print(movie['title'], movie['most_related_movies'])
