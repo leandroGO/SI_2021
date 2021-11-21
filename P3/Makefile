@@ -1,8 +1,9 @@
 create_env:
 	virtualenv -p python3 si1pyenv
-	source si1pyenv/bin/activate
+
+install:
 	pip3 install Flask SQLAlchemy Flask-SQLAlchemy SQLAlchemy-Utils \
-	psycopg2 itsdangerous Flask-Session
+	psycopg2 itsdangerous Flask-Session pymongo
 
 create_db:
 	@echo drop db...
