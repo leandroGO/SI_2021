@@ -11,6 +11,7 @@ from pymongo import MongoClient
 
 TOP_LIMIT = 10  # TODO: cambiar a 400
 MAX_TOP_RELATED = 10
+MAX_RELATED = 10
 
 def run_query(db_engine, query, movieid):
     try:
@@ -102,5 +103,18 @@ for m1 in movies:
         if len(m1['most_related_movies']) == MAX_TOP_RELATED:
             break
 
+# Encuentra las películas relacionadas del top 400 UK
+for m1 in movies:
+    m1['related_movies'] = []
+    num_genres = len(m1['genres'])
+    for m2 in movies:
+        common = set(m1['genres']).intersection(set(m2['genres']))
+        if num_genres/2 <= len(common) < num_genres:
+            m1['related_movies'].append({'title': m2['title'],
+                                         'year': m2['year']})
+
+        if len(m1['related_movies']) == MAX_RELATED:
+            break
+
 for movie in movies:
-    print(movie['title'], movie['most_related_movies'])
+    print(movie['title'], movie['most_related_movies'], movie['related_movies'])
