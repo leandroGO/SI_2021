@@ -10,6 +10,7 @@ from sqlalchemy.sql import select
 from pymongo import MongoClient
 
 TOP_LIMIT = 10  # TODO: cambiar a 400
+MAX_TOP_RELATED = 10
 
 def run_query(db_engine, query, movieid):
     try:
@@ -98,7 +99,7 @@ for m1 in movies:
         if m1 != m2 and set(m1['genres']) == set(m2['genres']):
             m1['most_related_movies'].append({'title': m2['title'],
                                               'year': m2['year']})
-        if len(m1['most_related_movies']) == 10:
+        if len(m1['most_related_movies']) == MAX_TOP_RELATED:
             break
 
 for movie in movies:
