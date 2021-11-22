@@ -13,10 +13,59 @@
     <h2> Ejemplo de MongoDB</h2>
 
     <!-- TODO: tabla de películas SciFi -->
+    <p>Peliculas ciencia ficcion entre 1994 y 1998</p>
+    <table>
+      <tr>
+        <th>Pelicula</th>
+        <th>Año</th>
+        <th>Generos</th>
+      </tr>
+      {% for movie in movies[0] %}
+      <tr>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.year }}</td>
+        <td>{{ movie.genres }}</td>
+      </tr>
+      {% endfor %}
+
+      <hr>
 
     <!-- TODO: tabla de películas Drama -->
 
+    <p>Dramas de 1998 que comiencen por 'The'</p>
+    <table>
+      <tr>
+        <th>Pelicula</th>
+        <th>Año</th>
+        <th>Generos</th>
+      </tr>
+      {% for movie in movies[1] %}
+      <tr>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.year }}</td>
+        <td>{{ movie.genres }}</td>
+      </tr>
+      {% endfor %}
+
+      <hr>
+
     <!-- TODO: tabla de películas JR y AB -->
+    <p>Peliculas con Julia Roberts y Alec Baldwin</p>
+    <table>
+      <tr>
+        <th>Pelicula</th>
+        <th>Año</th>
+        <th>Reparto</th>
+      </tr>
+      {% for movie in movies[2] %}
+      <tr>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.year }}</td>
+        <td>{{ movie.actors }}</td>
+      </tr>
+      {% endfor %}
+
+      <hr>
 
   </BODY>
 </HTML>

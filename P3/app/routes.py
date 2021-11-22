@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from app import app
-from app import database
+from app.database import *
 from flask import render_template, request, url_for
 import os
 import sys
@@ -32,4 +32,19 @@ def borraCiudad():
 def topUK():
     # TODO: consultas a MongoDB ...
     movies=[[],[],[]]
+    topUK = getMongoCollection(mongo_client)
+
+    # Consulta para tabla Sci-fi
+    for film in topUK.find({"year": {"$in": [y for y in range(1994, 1999)]}, "genres": "Sci-Fi"}):
+        movies[0].append(film)
+
+    # Consulta para tabla dramas
+    for film in topUK.find({"year": 1998, "genres": "Drama", "title": {"$regex": ", The"}}):
+        movies[1].append(film)
+
+    # Consulta para peliculas de JR y AB
+    for film in topUK.find({"actors": {"$all": ["Roberts, Julia", "Baldwin, Alec"]}}):
+        movies[2].append(film)
+
+
     return render_template('topUK.html', movies=movies)

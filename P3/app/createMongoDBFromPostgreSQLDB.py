@@ -9,7 +9,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, tex
 from sqlalchemy.sql import select
 from pymongo import MongoClient
 
-TOP_LIMIT = 10  # TODO: cambiar a 400
+TOP_LIMIT = 400  # TODO: cambiar a 400
 MAX_TOP_RELATED = 10
 MAX_RELATED = 10
 
