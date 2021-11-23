@@ -27,24 +27,23 @@ def borraCiudad():
     else:
         return render_template('borraCiudad.html')
 
-    
+
 @app.route('/topUK', methods=['POST','GET'])
 def topUK():
-    # TODO: consultas a MongoDB ...
     movies=[[],[],[]]
     topUK = getMongoCollection(mongo_client)
 
     # Consulta para tabla Sci-fi
+    #movies[0] = list(topUK.find({"year": {'$gte': 1994, '$lte': 1998}, "genres": "Sci-Fi"}))
     for film in topUK.find({"year": {"$in": [y for y in range(1994, 1999)]}, "genres": "Sci-Fi"}):
         movies[0].append(film)
 
     # Consulta para tabla dramas
-    for film in topUK.find({"year": 1998, "genres": "Drama", "title": {"$regex": ", The"}}):
+    for film in topUK.find({"year": 1998, "genres": "Drama", "title": {"$regex": ".*, The"}}):
         movies[1].append(film)
 
     # Consulta para peliculas de JR y AB
     for film in topUK.find({"actors": {"$all": ["Roberts, Julia", "Baldwin, Alec"]}}):
         movies[2].append(film)
-
 
     return render_template('topUK.html', movies=movies)
