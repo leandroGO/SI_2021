@@ -76,7 +76,7 @@ q_directors = (select([db_directors.c.directorname])
 q_actors = (select([db_actors.c.actorname])
             .select_from(db_actors.join(db_actormovies,
                          db_actors.c.actorid == db_actormovies.c.actorid))
-            .where(text("movieid = :movieid and creditsposition >= 0"))
+            .where(text("movieid = :movieid"))
             .order_by(db_actormovies.c.creditsposition))
 for movie in movies:
     movie['title'] = re.sub(r'\s\(.*\)$', '', movie['title'])
