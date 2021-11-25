@@ -109,7 +109,7 @@ for m1 in movies:
     num_genres = len(m1['genres'])
     for m2 in movies:
         common = set(m1['genres']).intersection(set(m2['genres']))
-        if num_genres/2 <= len(common) < num_genres:
+        if num_genres/2 <= len(common) < num_genres/2 + 1:
             m1['related_movies'].append({'title': m2['title'],
                                          'year': m2['year']})
 
