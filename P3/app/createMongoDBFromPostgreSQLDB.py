@@ -1,36 +1,41 @@
 # -*- coding: utf-8 -*-
 
-import os
-import sys, traceback, time
+import sys
+import traceback
 import re
 
 from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text, desc
+from sqlalchemy import Table, MetaData, text, desc
 from sqlalchemy.sql import select
+from sqlalchemy.exc import SQLAlchemyError
 from pymongo import MongoClient
 
-TOP_LIMIT = 400  # TODO: cambiar a 400
+TOP_LIMIT = 400
 MAX_TOP_RELATED = 10
 MAX_RELATED = 10
+
 
 def run_query(db_engine, query, movieid):
     try:
         db_conn = db_engine.connect()
         db_result = db_conn.execute(query, movieid=movieid)
         db_conn.close()
-    except:
+    except SQLAlchemyError:
         _exceptionHandler(db_conn)
     return db_result
 
+
 def _exceptionHandler(db_conn):
     if db_conn is not None:
-            db_conn.close()
+        db_conn.close()
     print("Exception in DB access:")
     print("-"*60)
     traceback.print_exc(file=sys.stderr)
     print("-"*60)
 
+
 # Extract ---------------------------------------------------------------------
+print("Extracting data from PostgreSQL DB...", end='')
 # Configura el motor de sqlalchemy
 db_engine = create_engine("postgresql://alumnodb:alumnodb@localhost/si1",
                           echo=False)
@@ -40,7 +45,7 @@ db_meta = MetaData(bind=db_engine)
 db_movies = Table('imdb_movies', db_meta, autoload=True,
                   autoload_with=db_engine)
 db_moviecountries = Table('imdb_moviecountries', db_meta, autoload=True,
-                       autoload_with=db_engine)
+                          autoload_with=db_engine)
 db_moviegenres = Table('imdb_moviegenres', db_meta, autoload=True,
                        autoload_with=db_engine)
 db_directors = Table('imdb_directors', db_meta, autoload=True,
@@ -48,9 +53,9 @@ db_directors = Table('imdb_directors', db_meta, autoload=True,
 db_directormovies = Table('imdb_directormovies', db_meta, autoload=True,
                           autoload_with=db_engine)
 db_actors = Table('imdb_actors', db_meta, autoload=True,
-                     autoload_with=db_engine)
+                  autoload_with=db_engine)
 db_actormovies = Table('imdb_actormovies', db_meta, autoload=True,
-                          autoload_with=db_engine)
+                       autoload_with=db_engine)
 
 # Extrae id, título y año de las TOP_LIMIT películas británicas más recientes
 query = (select([db_movies.c.movieid,
@@ -64,7 +69,7 @@ try:
     db_conn = db_engine.connect()
     db_result = db_conn.execute(query)
     db_conn.close()
-except:
+except SQLAlchemyError:
     _exceptionHandler(db_conn)
 movies = [r._asdict() for r in db_result]
 
@@ -90,8 +95,10 @@ for movie in movies:
 
     db_result = run_query(db_engine, q_actors, movie['movieid'])
     movie['actors'] = [a for a, in db_result]
+print("OK")
 
 # Transform -------------------------------------------------------------------
+print("Transforming data...", end='')
 # Encuentra las películas más relacionadas del top 400 UK
 # Observación: el diccionario está ordenado por year desc
 for m1 in movies:
@@ -115,8 +122,10 @@ for m1 in movies:
 
         if len(m1['related_movies']) == MAX_RELATED:
             break
+print("OK")
 
 # Load ------------------------------------------------------------------------
+print("Loading data into MongoDB...", end='')
 # Crea la conexión con MongoDB
 mongo_client = MongoClient()
 si1_db = mongo_client.si1
@@ -126,3 +135,4 @@ si1_db.topUK.drop()
 si1_db.topUK.insert_many(movies)
 
 mongo_client.close()
+print("OK")
