@@ -22,7 +22,7 @@ def borraCiudad():
         bCommit = "bCommit" in request.form
         bFallo  = "bFallo"  in request.form
         duerme  = request.form["duerme"]
-        dbr = database.delCity(city, bFallo, bSQL=='1', int(duerme), bCommit)
+        dbr = delCity(city, bFallo, bSQL=='1', int(duerme), bCommit)
         return render_template('borraCiudad.html', dbr=dbr)
     else:
         return render_template('borraCiudad.html')
