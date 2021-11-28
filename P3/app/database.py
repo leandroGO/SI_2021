@@ -52,17 +52,34 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
     try:
         # TODO: ejecutar consultas
         conn = dbConnect()
+        transaction = None
 
         if bSQL:
             del1 = ("DELETE FROM orderdetail "
                     "USING orders NATURAL JOIN customers "
                     "WHERE orderdetail.orderid = orders.orderid "
-                    f"AND city = '{city}'")
+                    f"AND city = '{city}'; ")
             del2 = ("DELETE FROM orders "
                     "USING customers "
                     "WHERE orders.customerid = customers.customerid "
-                    f"AND city = '{city}'")
-            del3 = f"DELETE FROM customers WHERE city = '{city}'"
+                    f"AND city = '{city}'; ")
+            del3 = f"DELETE FROM customers WHERE city = '{city}'; "
+
+            commit = "COMMIT; "
+            begin = "BEGIN; "
+
+            if bFallo:
+                if bCommit:
+                    query = begin + del1 + commit + begin + del3 + del2 + commit
+                else:
+                    query = begin + del1 + del3 + del2 + commit
+            else:
+                if bCommit:
+                    query = begin + del1 + commit + begin + del2 + del3 + commit
+                else:
+                    query = begin + del1 + del2 + del3 + commit
+
+            conn.execute(query)
         else:
             # Usando SQLAlchemy
             del1 = (delete(db_orderdetail)
@@ -89,7 +106,8 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 conn.execute(del3)
             transaction.commit()
     except Exception as e:
-        transaction.rollback()
+        if transaction:
+            transaction.rollback()
         conn.close()
         dbr.append(e)
 
