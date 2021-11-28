@@ -64,26 +64,37 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                     f"AND city = '{city}'")
             del3 = f"DELETE FROM customers WHERE city = '{city}'"
         else:
+            # Usando SQLAlchemy
             del1 = (delete(db_orderdetail)
                 .where(db_customers.c.city == city)
-                .where(db_orderdetail.c.orderid == db_orders.c.orderid))
+                .where(db_orderdetail.c.orderid == db_orders.c.orderid)
+                .where(db_customers.c.customerid == db_orders.c.customerid))
             del2 = (delete(db_orders)
                 .where(db_customers.c.city == city)
                 .where(db_customers.c.customerid == db_orders.c.customerid))
             del3 = delete(db_customers).where(db_customers.c.city == city)
 
-        with conn.begin():
+            transaction = conn.begin()
             conn.execute(del1)
-            conn.execute(del2)
-            conn.execute(del3)
+            if bCommit:
+                transaction.commit()
+                dbr.append("Commit intermedio")
+                transaction = conn.begin()
 
-        conn.close()
+            if bFallo:
+                conn.execute(del3)
+                conn.execute(del2)
+            else:
+                conn.execute(del2)
+                conn.execute(del3)
+            transaction.commit()
     except Exception as e:
-        # TODO: deshacer en caso de error
+        transaction.rollback()
+        conn.close()
         dbr.append(e)
 
     else:
-        # TODO: confirmar cambios si todo va bien
+        conn.close()
         dbr.append("Bien")
 
     return dbr
