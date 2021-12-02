@@ -12,6 +12,7 @@ BEGIN
         AND orders.status IS NULL
         AND products.prod_id = orderdetail.prod_id;
 
+    PERFORM pg_sleep(5);    -- Sleep de 5 segundos
     RETURN NULL;
 END;
 $$ LANGUAGE 'plpgsql';

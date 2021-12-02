@@ -15,3 +15,7 @@ https://www.postgresql.org/docs/9.4/using-explain.html
 https://www.postgresql.org/docs/10/how-parallel-query-works.html
 **ANALYZE cambia el comportamiento de la BD**
 EXPLAIN vs EXPLAIN ANALYZE
+
+
+Transacciones -----------------------------------------------------------------
+NOT FOUND -> traza: 0 filas afectadas

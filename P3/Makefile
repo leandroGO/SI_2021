@@ -1,5 +1,5 @@
 create_env:
-	virtualenv -p python3 si1pyenv
+	virtualenv -p python3 ~/si1pyenv
 
 install:
 	pip3 install Flask SQLAlchemy Flask-SQLAlchemy SQLAlchemy-Utils \
