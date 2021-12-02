@@ -50,11 +50,11 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
     # - ir guardando trazas mediante dbr.append()
 
     try:
-        # TODO: ejecutar consultas
         conn = dbConnect()
         transaction = None
 
         if bSQL:
+            # Definiciones
             del1 = ("DELETE FROM orderdetail "
                     "USING orders NATURAL JOIN customers "
                     "WHERE orderdetail.orderid = orders.orderid "
@@ -68,18 +68,56 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
             commit = "COMMIT; "
             begin = "BEGIN; "
 
-            if bFallo:
-                if bCommit:
-                    query = begin + del1 + commit + begin + del3 + del2 + commit
-                else:
-                    query = begin + del1 + del3 + del2 + commit
-            else:
-                if bCommit:
-                    query = begin + del1 + commit + begin + del2 + del3 + commit
-                else:
-                    query = begin + del1 + del2 + del3 + commit
+            q1 = ("SELECT COUNT(*) "
+                    "FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail "
+                    f"WHERE city = '{city} '")
 
-            conn.execute(query)
+            q2 = ("SELECT COUNT(*) "
+                    "FROM customers NATURAL JOIN orders "
+                    f"WHERE city = '{city} '")
+
+            q3 = ("SELECT COUNT(*) "
+                    "FROM customers  "
+                    f"WHERE city = '{city} '")
+
+            # Ejecucion de consulas
+            conn.execute(begin)
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Inicialmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
+            conn.execute(del1)
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras primera eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
+            if bCommit:
+                conn.execute(commit + begin)
+                dbr.append("Commit intermedio")
+
+            if bFallo:
+                aux = del3
+                del3 = del2
+                del2 = aux
+            
+            conn.execute(del2)
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras segunda eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
+            conn.execute(del3)
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras tercera eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
         else:
             # Usando SQLAlchemy
             del1 = (delete(db_orderdetail)
@@ -106,12 +144,21 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 conn.execute(del3)
             transaction.commit()
     except Exception as e:
-        if transaction:
+        if bSQL:
+            conn.execute("ROLLBACK")
+        elif transaction:
             transaction.rollback()
         conn.close()
         dbr.append(e)
 
     else:
+        if bSQL:
+            conn.execute(commit)
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
         conn.close()
         dbr.append("Bien")
 
