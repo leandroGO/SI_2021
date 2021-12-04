@@ -115,6 +115,12 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 aux = del3
                 del3 = del2
                 del2 = aux
+            else:
+                # Duerme
+                current_time = time.strftime("%H:%M:%S", time.localtime())
+                print(f"**** [{current_time}] Duerme durante {duerme} "
+                      "segundos...")
+                time.sleep(duerme)
 
             conn.execute(del2)
             res1 = list(conn.execute(q1))
@@ -186,6 +192,12 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 aux = del3
                 del3 = del2
                 del2 = aux
+            else:
+                # Duerme
+                current_time = time.strftime("%H:%M:%S", time.localtime())
+                print(f"**** [{current_time}] Duerme durante {duerme} "
+                      "segundos...")
+                time.sleep(duerme)
 
             conn.execute(del2)
 
