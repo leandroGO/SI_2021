@@ -54,6 +54,7 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
         transaction = None
 
         if bSQL:
+            # Usando SQL
             # Definiciones
             del1 = ("DELETE FROM orderdetail "
                     "USING orders NATURAL JOIN customers "
@@ -70,15 +71,15 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
 
             q1 = ("SELECT COUNT(*) "
                     "FROM customers NATURAL JOIN orders NATURAL JOIN orderdetail "
-                    f"WHERE city = '{city} '")
+                    f"WHERE city = '{city}';")
 
             q2 = ("SELECT COUNT(*) "
                     "FROM customers NATURAL JOIN orders "
-                    f"WHERE city = '{city} '")
+                    f"WHERE city = '{city}';")
 
             q3 = ("SELECT COUNT(*) "
                     "FROM customers  "
-                    f"WHERE city = '{city} '")
+                    f"WHERE city = '{city}';")
 
             # Ejecucion de consulas
             conn.execute(begin)
@@ -120,6 +121,8 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
 
         else:
             # Usando SQLAlchemy
+            # Definiciones
+
             del1 = (delete(db_orderdetail)
                 .where(db_customers.c.city == city)
                 .where(db_orderdetail.c.orderid == db_orders.c.orderid)
@@ -145,12 +148,22 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
             transaction.commit()
     except Exception as e:
         if bSQL:
-            conn.execute("ROLLBACK")
+            conn.execute("ROLLBACK;")
         elif transaction:
             transaction.rollback()
-        conn.close()
+        
         dbr.append(e)
 
+        if bSQL:
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+        else:
+            pass
+
+        conn.close()
     else:
         if bSQL:
             conn.execute(commit)
@@ -159,8 +172,10 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
             res3 = list(conn.execute(q3))
 
             dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+        else:
+            pass
         conn.close()
-        dbr.append("Bien")
+        dbr.append("Transaccion realizada con exito")
 
     return dbr
 
