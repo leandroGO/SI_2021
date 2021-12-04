@@ -4,7 +4,8 @@ import os
 import sys, traceback, time
 
 from sqlalchemy import (create_engine, delete, Table, Column, Integer,
-                        String, MetaData, ForeignKey, text, desc)
+                        String, MetaData, ForeignKey, text, desc, func)
+from sqlalchemy.sql import select
 from pymongo import MongoClient
 
 # configurar el motor de sqlalchemy
@@ -132,48 +133,88 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 .where(db_customers.c.customerid == db_orders.c.customerid))
             del3 = delete(db_customers).where(db_customers.c.city == city)
 
+            q1 = (select([func.count()])
+                    .select_from(db_customers.join(db_orders).join(db_orderdetail))
+                    .where(db_customers.c.city == city))
+
+            q2 = (select([func.count()])
+                    .select_from(db_customers.join(db_orders))
+                    .where(db_customers.c.city == city))
+
+            q3 = (select([func.count()])
+                    .select_from(db_customers)
+                    .where(db_customers.c.city == city))
+
             transaction = conn.begin()
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Inicialmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
             conn.execute(del1)
+
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras primera eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
             if bCommit:
                 transaction.commit()
                 dbr.append("Commit intermedio")
                 transaction = conn.begin()
 
             if bFallo:
-                conn.execute(del3)
-                conn.execute(del2)
-            else:
-                conn.execute(del2)
-                conn.execute(del3)
-            transaction.commit()
+                aux = del3
+                del3 = del2
+                del2 = aux
+
+            conn.execute(del2)
+
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras segunda eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
+            conn.execute(del3)
+
+            res1 = list(conn.execute(q1))
+            res2 = list(conn.execute(q2))
+            res3 = list(conn.execute(q3))
+
+            dbr.append(f"Tras tercera eliminacion: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
     except Exception as e:
         if bSQL:
             conn.execute("ROLLBACK;")
         elif transaction:
             transaction.rollback()
+
+        print(e)
         
         dbr.append(e)
 
-        if bSQL:
-            res1 = list(conn.execute(q1))
-            res2 = list(conn.execute(q2))
-            res3 = list(conn.execute(q3))
+        res1 = list(conn.execute(q1))
+        res2 = list(conn.execute(q2))
+        res3 = list(conn.execute(q3))
 
-            dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
-        else:
-            pass
+        dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
 
         conn.close()
     else:
         if bSQL:
             conn.execute(commit)
-            res1 = list(conn.execute(q1))
-            res2 = list(conn.execute(q2))
-            res3 = list(conn.execute(q3))
-
-            dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
         else:
-            pass
+            transaction.commit()
+
+        res1 = list(conn.execute(q1))
+        res2 = list(conn.execute(q2))
+        res3 = list(conn.execute(q3))
+
+        dbr.append(f"Finalmente: {res3[0][0]} clientes en {city}, {res2[0][0]} pedidos, {res1[0][0]} detalles")
+
         conn.close()
         dbr.append("Transaccion realizada con exito")
 
