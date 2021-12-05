@@ -13,5 +13,5 @@ create_db:
 	@echo load db...
 	gunzip -c dump_v1.5-P3.sql.gz | psql si1 -U alumnodb
 
-create_promo:
+run_updpromo:
 	cat SQL/updPromo.sql | psql si1 -U alumnodb
