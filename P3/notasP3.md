@@ -19,3 +19,4 @@ EXPLAIN vs EXPLAIN ANALYZE
 
 Transacciones -----------------------------------------------------------------
 NOT FOUND -> traza: 0 filas afectadas
+pg_locks <- para ver locks

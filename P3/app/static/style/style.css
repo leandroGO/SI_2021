@@ -1,0 +1,13 @@
+table, th, td {
+    text-align:center;
+    border-collapse:collapse;
+}
+
+tr:nth-child(even) {/*, td:nth-child(even), th:nth-child(even) {*/
+    background-color:rgba(128, 128, 128, 0.2);
+}
+
+th {
+    background-color: #04AA6D;
+    color: white;
+}

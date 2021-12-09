@@ -1,31 +1,58 @@
-<!DOCTYPE HTML> 
+<!DOCTYPE HTML>
 <!--
  Ejemplo de MongoDB
 -->
-<HTML> 
-  <HEAD> 
-	  <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8"> 
-	  <TITLE>Ejemplo de MongoDB</TITLE>
-  </HEAD> 
+<HTML>
+  <HEAD>
+    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+    <TITLE>Ejemplo de MongoDB</TITLE>
+    <link rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static', filename='style/style.css')}}"/>
+  </HEAD>
 
   <BODY>
- 
+
     <h2> Ejemplo de MongoDB</h2>
     <hr>
 
     <!-- TODO: tabla de películas SciFi -->
-    <p>Peliculas ciencia ficcion entre 1994 y 1998</p>
+    <h3>Peliculas ciencia ficcion entre 1994 y 1998</h3>
     <table>
       <tr>
         <th>Pelicula</th>
         <th>Año</th>
         <th>Generos</th>
+        <th>Directores</th>
+        <th>Reparto</th>
+        <th>Peliculas mas relacionadas</th>
+        <th>Peliculas relacionadas</th>
       </tr>
       {% for movie in movies[0] %}
       <tr>
         <td>{{ movie.title }}</td>
         <td>{{ movie.year }}</td>
-        <td>{{ movie.genres }}</td>
+        <td>{{ movie.genres|join(', ') }}</td>
+        <td>{{ movie.directors|join('; ') }}</td>
+        <td>{{ movie.actors|join('; ') }}</td>
+        <td>
+          {% if movie.most_related_movies %}
+            {% for mrel in movie.most_related_movies %}
+              {{ mrel.title }} ({{ mrel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
+        <td>
+          {% if movie.related_movies %}
+            {% for rel in movie.related_movies %}
+              {{ rel.title }} ({{ rel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </table>
@@ -34,18 +61,42 @@
 
     <!-- TODO: tabla de películas Drama -->
 
-    <p>Dramas de 1998 que comiencen por 'The'</p>
+    <h3>Dramas de 1998 que comiencen por 'The'</h3>
     <table>
       <tr>
         <th>Pelicula</th>
         <th>Año</th>
         <th>Generos</th>
+        <th>Directores</th>
+        <th>Reparto</th>
+        <th>Peliculas mas relacionadas</th>
+        <th>Peliculas relacionadas</th>
       </tr>
       {% for movie in movies[1] %}
       <tr>
         <td>{{ movie.title }}</td>
         <td>{{ movie.year }}</td>
-        <td>{{ movie.genres }}</td>
+        <td>{{ movie.genres|join(', ') }}</td>
+        <td>{{ movie.directors|join('; ') }}</td>
+        <td>{{ movie.actors|join('; ') }}</td>
+        <td>
+          {% if movie.most_related_movies %}
+            {% for mrel in movie.most_related_movies %}
+              {{ mrel.title }} ({{ mrel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
+        <td>
+          {% if movie.related_movies %}
+            {% for rel in movie.related_movies %}
+              {{ rel.title }} ({{ rel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </table>
@@ -53,18 +104,42 @@
     <hr>
 
     <!-- TODO: tabla de películas JR y AB -->
-    <p>Peliculas con Julia Roberts y Alec Baldwin</p>
+    <h3>Peliculas con Julia Roberts y Alec Baldwin</h3>
     <table>
       <tr>
         <th>Pelicula</th>
         <th>Año</th>
+        <th>Generos</th>
+        <th>Directores</th>
         <th>Reparto</th>
+        <th>Peliculas mas relacionadas</th>
+        <th>Peliculas relacionadas</th>
       </tr>
       {% for movie in movies[2] %}
       <tr>
         <td>{{ movie.title }}</td>
         <td>{{ movie.year }}</td>
-        <td>{{ movie.actors }}</td>
+        <td>{{ movie.genres|join(', ') }}</td>
+        <td>{{ movie.directors|join('; ') }}</td>
+        <td>{{ movie.actors|join('; ') }}</td>
+        <td>
+          {% if movie.most_related_movies %}
+            {% for mrel in movie.most_related_movies %}
+              {{ mrel.title }} ({{ mrel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
+        <td>
+          {% if movie.related_movies %}
+            {% for rel in movie.related_movies %}
+              {{ rel.title }} ({{ rel.year }}){% if not loop.last %}; {% endif %}
+            {% endfor %}
+          {% else %}
+          <p>-</p>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </table>
