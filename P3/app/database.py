@@ -115,7 +115,8 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 aux = del3
                 del3 = del2
                 del2 = aux
-            else:
+
+            if duerme > 0:
                 # Duerme
                 current_time = time.strftime("%H:%M:%S", time.localtime())
                 print(f"**** [{current_time}] Duerme durante {duerme} "
@@ -192,7 +193,8 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 aux = del3
                 del3 = del2
                 del2 = aux
-            else:
+
+            if duerme > 0:
                 # Duerme
                 current_time = time.strftime("%H:%M:%S", time.localtime())
                 print(f"**** [{current_time}] Duerme durante {duerme} "
